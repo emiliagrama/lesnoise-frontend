@@ -3,6 +3,9 @@ import { useState } from "react";
 export default function CommentForm({ position, pageUrl, onSubmit, onClose }) {
   const [content, setContent] = useState("");
 
+  const safeX = Math.min(Math.max(position.x, 15), 85);
+  const safeY = Math.min(Math.max(position.y, 15), 85);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -21,8 +24,8 @@ export default function CommentForm({ position, pageUrl, onSubmit, onClose }) {
     <div
       style={{
         position: "absolute",
-        left: `${position.x}%`,
-        top: `${position.y}%`,
+        left: `${safeX}%`,
+        top: `${safeY}%`,
         transform: "translate(-50%, -120%)",
         background: "white",
         border: "1px solid #ccc",

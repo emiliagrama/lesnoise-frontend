@@ -1,0 +1,849 @@
+/* =========================
+   Base
+========================= */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  background: #f7f8fa;
+}
+
+.markr-home {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(59, 130, 246, 0.06), transparent 28%),
+    linear-gradient(to bottom, #f8fafc 0%, #f4f7fb 100%);
+  color: #0f172a;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.markr-shell {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================
+   Header
+========================= */
+
+.markr-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  background: rgba(248, 250, 252, 0.76);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.markr-header__inner {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.markr-logo {
+  text-decoration: none;
+  color: #0f172a;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.markr-header__login {
+  text-decoration: none;
+  color: #0f172a;
+  font-size: 0.96rem;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.markr-header__login:hover {
+  opacity: 0.65;
+}
+
+/* =========================
+   Buttons
+========================= */
+
+.markr-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 164px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.96rem;
+  font-weight: 600;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.markr-button:hover {
+  transform: translateY(-1px);
+}
+
+.markr-button--primary {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, 0.12);
+}
+
+.markr-button--primary:hover {
+  background: #111827;
+}
+
+.markr-button--ghost {
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.markr-button--ghost:hover {
+  border-color: rgba(15, 23, 42, 0.2);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* =========================
+   Hero
+========================= */
+
+.markr-hero {
+  padding: 120px 0 90px;
+  background: radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.03), transparent 40%);
+}
+
+.markr-hero__grid {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  align-items: center;
+  gap: 56px;
+}
+
+.markr-hero__left {
+  max-width: 560px;
+}
+
+.markr-hero__eyebrow {
+  margin: 0 0 18px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.markr-hero__title {
+  margin: 0 0 24px;
+  font-size: clamp(3.4rem, 6vw, 5.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+  font-weight: 700;
+  transform: translateX(-10px);
+}
+
+.markr-hero__subtitle {
+  max-width: 540px;
+  margin: 0;
+  font-size: 1.14rem;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.markr-hero__actions {
+  margin-top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.markr-hero__right {
+  display: flex;
+  justify-content: center;
+}
+
+.markr-hero__product {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+}
+
+/* =========================
+   Product card in hero
+========================= */
+
+.markr-product__glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: 18%;
+  left: 14%;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.18), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.markr-product__frame {
+  position: relative;
+  z-index: 1;
+  width: 420px;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow:
+    0 40px 80px rgba(0, 0, 0, 0.15),
+    0 10px 30px rgba(0, 0, 0, 0.08);
+  transform: rotate(-3deg) perspective(1200px) rotateY(-8deg);
+  transition: transform 0.6s ease;
+}
+
+.markr-hero__product:hover .markr-product__frame {
+  transform: rotate(-2deg) perspective(1200px) rotateY(-2deg) scale(1.02);
+}
+
+.markr-product__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(248, 250, 252, 0.85);
+}
+
+.dots {
+  display: flex;
+  gap: 4px;
+}
+
+.dots span {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+.url {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.markr-product__content {
+  padding: 24px 22px;
+}
+
+.markr-product__content h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.markr-product__content p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* =========================
+   Product pins
+========================= */
+
+.pin {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  animation: float 4s ease-in-out infinite;
+}
+
+.pin-1 {
+  top: 40%;
+  right: 19%;
+}
+
+.pin-2 {
+  top: 61%;
+  right: 34%;
+  animation-delay: 0.5s;
+}
+
+.pin-3 {
+  bottom: 14%;
+  right: 24%;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* =========================
+   Product comment bubble
+========================= */
+
+.comment {
+  position: absolute;
+  top: 18%;
+  right: -30px;
+  width: 210px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.comment strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.comment p {
+  margin: 0;
+  color: #334155;
+}
+
+/* =========================
+   Product stage section
+========================= */
+
+.markr-stage {
+  padding: 0 0 110px;
+}
+
+.markr-stage__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 34px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 38px 90px rgba(15, 23, 42, 0.12),
+    0 12px 32px rgba(15, 23, 42, 0.05);
+}
+
+.markr-stage__chrome {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.markr-stage__dots {
+  display: flex;
+  gap: 8px;
+}
+
+.markr-stage__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+.markr-stage__address {
+  flex: 1;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  background: rgba(255, 255, 255, 0.92);
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.markr-stage__surface {
+  position: relative;
+  min-height: 660px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(241, 245, 249, 0.92)),
+    linear-gradient(to bottom, #fbfcfe, #f1f5f9);
+}
+
+.markr-stage__glow {
+  position: absolute;
+  inset: auto auto 14% -8%;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.markr-stage__page {
+  position: absolute;
+  left: 8%;
+  top: 14%;
+  max-width: 490px;
+}
+
+.markr-stage__badge {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.markr-stage__headline {
+  margin: 0 0 20px;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 0.97;
+  letter-spacing: -0.07em;
+  font-weight: 700;
+}
+
+.markr-stage__copy {
+  max-width: 420px;
+  margin: 0 0 28px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: #475569;
+}
+
+.markr-stage__line {
+  width: 390px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+}
+
+.markr-stage__line--short {
+  width: 250px;
+  margin-top: 14px;
+}
+
+.markr-stage__mini-card {
+  margin-top: 34px;
+  width: 280px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.markr-stage__mini-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.markr-stage__mini-card p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.65;
+}
+
+.markr-pin {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  cursor: default;
+}
+
+.markr-pin--one {
+  top: 31%;
+  right: 23%;
+}
+
+.markr-pin--two {
+  top: 56%;
+  right: 34%;
+}
+
+.markr-pin--three {
+  bottom: 18%;
+  right: 18%;
+}
+
+.markr-comment-card {
+  position: absolute;
+  top: 18%;
+  right: 7%;
+  width: 280px;
+  padding: 20px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 28px 60px rgba(15, 23, 42, 0.12),
+    0 12px 24px rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.markr-comment-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.markr-comment-card__author {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.markr-comment-card__tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.05);
+  color: #475569;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.markr-comment-card__body {
+  margin: 0;
+  color: #334155;
+  line-height: 1.72;
+}
+
+/* =========================
+   Value
+========================= */
+
+.markr-value {
+  padding: 0 0 72px;
+}
+
+.markr-value__inner {
+  text-align: center;
+}
+
+.markr-value__inner p {
+  margin: 10px 0;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1.03;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+}
+
+.markr-value__subline {
+  display: inline-block;
+  margin-top: 30px;
+  color: #475569;
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+/* =========================
+   Flow
+========================= */
+
+.markr-flow {
+  padding: 0 0 110px;
+}
+
+.markr-flow__text {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+  line-height: 1.28;
+  letter-spacing: -0.05em;
+  color: #0f172a;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.markr-cta {
+  padding: 0 0 120px;
+}
+
+.markr-cta__panel {
+  text-align: center;
+  padding: 68px 32px;
+  border-radius: 34px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.92)),
+    #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow:
+    0 34px 80px rgba(15, 23, 42, 0.08),
+    0 12px 28px rgba(15, 23, 42, 0.04);
+}
+
+.markr-cta__eyebrow {
+  margin: 0 0 14px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.markr-cta__title {
+  margin: 0 0 16px;
+  font-size: clamp(2.3rem, 4vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+}
+
+.markr-cta__subtitle {
+  max-width: 620px;
+  margin: 0 auto 30px;
+  color: #475569;
+  line-height: 1.8;
+  font-size: 1.04rem;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 980px) {
+  .markr-hero {
+    padding: 92px 0 56px;
+  }
+
+  .markr-hero__grid {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .markr-hero__left {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .markr-hero__title {
+    transform: none;
+  }
+
+  .markr-hero__subtitle {
+    margin: 0 auto;
+  }
+
+  .markr-hero__actions {
+    justify-content: center;
+  }
+
+  .markr-hero__right {
+    justify-content: center;
+  }
+
+  .markr-stage {
+    padding: 34px 0 92px;
+  }
+
+  .markr-stage__surface {
+    min-height: 600px;
+  }
+
+  .markr-stage__page {
+    position: relative;
+    left: auto;
+    top: auto;
+    max-width: 100%;
+    padding: 44px 28px 0;
+  }
+
+  .markr-stage__copy {
+    max-width: 100%;
+  }
+
+  .markr-stage__line {
+    width: 72%;
+  }
+
+  .markr-stage__line--short {
+    width: 46%;
+  }
+
+  .markr-stage__mini-card {
+    width: min(320px, 100%);
+  }
+
+  .markr-comment-card {
+    top: 28px;
+    right: 24px;
+    width: 250px;
+  }
+
+  .markr-pin--one {
+    top: 36%;
+    right: 15%;
+  }
+
+  .markr-pin--two {
+    top: 56%;
+    right: 26%;
+  }
+
+  .markr-pin--three {
+    bottom: 14%;
+    right: 16%;
+  }
+}
+
+@media (max-width: 640px) {
+  .markr-shell {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .markr-header__inner {
+    min-height: 70px;
+  }
+
+  .markr-hero {
+    padding: 74px 0 42px;
+  }
+
+  .markr-hero__title {
+    font-size: 3rem;
+  }
+
+  .markr-hero__subtitle {
+    font-size: 1rem;
+  }
+
+  .markr-button {
+    min-width: 148px;
+    padding: 13px 20px;
+  }
+
+  .markr-product__frame {
+    width: 100%;
+    max-width: 360px;
+    height: 250px;
+    transform: none;
+  }
+
+  .markr-product__glow {
+    width: 280px;
+    height: 280px;
+    left: 12%;
+  }
+
+  .comment {
+    display: none;
+  }
+
+  .markr-stage {
+    padding: 26px 0 72px;
+  }
+
+  .markr-stage__frame {
+    border-radius: 24px;
+  }
+
+  .markr-stage__chrome {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .markr-stage__address {
+    font-size: 0.84rem;
+    height: 38px;
+  }
+
+  .markr-stage__surface {
+    min-height: 520px;
+  }
+
+  .markr-stage__page {
+    padding: 34px 18px 0;
+  }
+
+  .markr-stage__headline {
+    font-size: 2.2rem;
+  }
+
+  .markr-stage__mini-card {
+    margin-top: 24px;
+  }
+
+  .markr-comment-card {
+    display: none;
+  }
+
+  .markr-pin--one {
+    top: 34%;
+    right: 12%;
+  }
+
+  .markr-pin--two {
+    top: 57%;
+    right: 26%;
+  }
+
+  .markr-pin--three {
+    bottom: 12%;
+    right: 14%;
+  }
+
+  .markr-value {
+    padding-bottom: 56px;
+  }
+
+  .markr-flow {
+    padding-bottom: 80px;
+  }
+
+  .markr-cta {
+    padding-bottom: 84px;
+  }
+
+  .markr-cta__panel {
+    padding: 42px 20px;
+    border-radius: 24px;
+  }
+}               
