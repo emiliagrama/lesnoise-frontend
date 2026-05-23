@@ -26,15 +26,14 @@ export default function Dashboard() {
     e.preventDefault();
 
     try {
-      const projectRes = await api.get("/api/projects");
-      const project = projectRes.data[0];
+      const projectRes = await api.post("/api/projects", {
+        name,
+        base_url: baseUrl,
+      });
 
-      if (!project) {
-        console.error("No project found for user");
-        return;
-      }
+      const project = projectRes.data;
 
-      const res = await api.post(
+      const reviewRes = await api.post(
         `/api/projects/${project.id}/review_sessions`,
         {
           name,
@@ -42,7 +41,7 @@ export default function Dashboard() {
         }
       );
 
-      setReviews((prev) => [...prev, res.data]);
+      setReviews((prev) => [...prev, reviewRes.data]);
       setName("");
       setBaseUrl("");
     } catch (err) {

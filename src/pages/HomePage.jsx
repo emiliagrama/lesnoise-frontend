@@ -14,6 +14,9 @@ export default function HomePage() {
             <Link to="/login" className="markr-header__login">
               Login
             </Link>
+            <Link to="/signup" className="markr-header__signup">
+              Sign up
+            </Link>
           </nav>
         </div>
       </header>

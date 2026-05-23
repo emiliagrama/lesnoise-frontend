@@ -49,15 +49,32 @@ body {
   letter-spacing: -0.04em;
 }
 
-.markr-header__login {
-  text-decoration: none;
-  color: #0f172a;
-  font-size: 0.96rem;
-  font-weight: 600;
-  transition: opacity 0.2s ease;
+.markr-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
-.markr-header__login:hover {
+.markr-header__login,
+.markr-header__signup {
+  text-decoration: none;
+  font-size: 0.96rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.markr-header__login {
+  color: #0f172a;
+}
+
+.markr-header__signup {
+  background: #071127;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 999px;
+}
+
+.markr-header__login:hover, .markr-header__signup:hover {
   opacity: 0.65;
 }
 
@@ -197,7 +214,7 @@ body {
   overflow: hidden;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(16, 173, 221, 0.438);
   box-shadow:
     0 40px 80px rgba(0, 0, 0, 0.15),
     0 10px 30px rgba(0, 0, 0, 0.08);
@@ -342,7 +359,7 @@ body {
   position: relative;
   overflow: hidden;
   border-radius: 34px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(16, 173, 221, 0.438);
   background: rgba(255, 255, 255, 0.82);
   box-shadow:
     0 38px 90px rgba(15, 23, 42, 0.12),
