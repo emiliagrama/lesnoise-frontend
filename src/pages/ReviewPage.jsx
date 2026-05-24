@@ -64,7 +64,15 @@ export default function ReviewPage() {
     try {
       const res = await api.post(
         `/api/review_sessions/${review.id}/comments`,
-        data
+        {
+          comment: {
+            ...data,
+            page_url: review.base_url,
+            page_path: new URL(review.base_url).pathname || "/",
+            viewport_width: window.innerWidth,
+            viewport_height: window.innerHeight,
+          },
+        }
       );
 
       setComments((prev) => [...prev, res.data]);
@@ -176,7 +184,13 @@ export default function ReviewPage() {
                   lineHeight: "1.5",
                 }}
               >
-                {`<script src="${window.location.origin}/lesnoise-widget.js"></script>`}
+              {`<script src="${window.location.origin}/lesnoise-widget.js"></script>
+
+              <script>
+                Lesnoise.init({
+                  reviewToken: "${review.share_token}"
+                });
+              </script>`}
               </pre>
 
               <button type="button" onClick={copyInstallSnippet}>
@@ -311,8 +325,8 @@ export default function ReviewPage() {
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   position: "absolute",
-                  left: `${activeComment.x_percent}%`,
-                  top: `${activeComment.y_percent}%`,
+                  left: `${Number(activeComment.x_percent)}%`,
+                  top: `${Number(activeComment.y_percent)}%`,
                   transform: "translate(-50%, -120%)",
                   background: "white",
                   border: "1px solid #d1d5db",

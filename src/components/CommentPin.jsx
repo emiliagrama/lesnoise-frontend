@@ -8,8 +8,8 @@ export default function CommentPin({ comment, isActive, onClick }) {
       }}
       style={{
         position: "absolute",
-        left: `${comment.x_percent}%`,
-        top: `${comment.y_percent}%`,
+        left: `${Number(comment.x_percent)}%`,
+        top: `${Number(comment.y_percent)}%`,
         transform: `translate(-50%, -50%) scale(${isActive ? 1.2 : 1})`,
         width: "26px",
         height: "26px",
