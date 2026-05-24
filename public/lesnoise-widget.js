@@ -1,6 +1,6 @@
 (function () {
   const params = new URLSearchParams(window.location.search);
-  const reviewToken = params.get("markr_review");
+  const reviewToken = params.get("lesnoise_review");
 
   if (!reviewToken) return;
 

@@ -13,7 +13,7 @@ export default function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/dashboard" element={<Dashboard />} />
 
-      {/* owner/admin view */}
+      {/* developer/admin view */}
       <Route path="/reviews/:id" element={<ReviewPage />} />
 
       {/* client/share view */}

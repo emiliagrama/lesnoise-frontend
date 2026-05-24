@@ -3,32 +3,32 @@ import "./HomePage.css";
 
 export default function HomePage() {
   return (
-    <main className="markr-home">
-      <header className="markr-header">
-        <div className="markr-shell markr-header__inner">
-          <Link to="/" className="markr-logo">
-            Markr
+    <main className="lesnoise-home">
+      <header className="lesnoise-header">
+        <div className="lesnoise-shell lesnoise-header__inner">
+          <Link to="/" className="lesnoise-logo">
+            lesnoise
           </Link>
 
-          <nav className="markr-header__nav">
-            <Link to="/login" className="markr-header__login">
+          <nav className="lesnoise-header__nav">
+            <Link to="/login" className="lesnoise-header__login">
               Login
             </Link>
-            <Link to="/signup" className="markr-header__signup">
+            <Link to="/signup" className="lesnoise-header__signup">
               Sign up
             </Link>
           </nav>
         </div>
       </header>
 
-<section className="markr-hero">
-  <div className="markr-shell markr-hero__grid">
+<section className="lesnoise-hero">
+  <div className="lesnoise-shell lesnoise-hero__grid">
 
     {/* LEFT SIDE */}
-    <div className="markr-hero__left">
-      <p className="markr-hero__eyebrow">Website feedback, refined</p>
+    <div className="lesnoise-hero__left">
+      <p className="lesnoise-hero__eyebrow">Website feedback, refined</p>
 
-      <h1 className="markr-hero__title">
+      <h1 className="lesnoise-hero__title">
         Feedback,
         <br />
         exactly where
@@ -36,37 +36,37 @@ export default function HomePage() {
         it matters.
       </h1>
 
-      <p className="markr-hero__subtitle">
+      <p className="lesnoise-hero__subtitle">
         Collect precise feedback directly on your pages — in context,
         in place, without friction.
       </p>
 
-      <div className="markr-hero__actions">
-        <Link to="/login" className="markr-button markr-button--primary">
+      <div className="lesnoise-hero__actions">
+        <Link to="/login" className="lesnoise-button lesnoise-button--primary">
           Start a review
         </Link>
 
-        <Link to="/login" className="markr-button markr-button--ghost">
+        <Link to="/login" className="lesnoise-button lesnoise-button--ghost">
           Login
         </Link>
       </div>
     </div>
 
     {/* RIGHT SIDE */}
-    <div className="markr-hero__right">
-      <div className="markr-hero__product">
+    <div className="lesnoise-hero__right">
+      <div className="lesnoise-hero__product">
 
-        <div className="markr-product__glow"></div>
+        <div className="lesnoise-product__glow"></div>
 
-        <div className="markr-product__frame">
-          <div className="markr-product__top">
+        <div className="lesnoise-product__frame">
+          <div className="lesnoise-product__top">
             <div className="dots">
               <span></span><span></span><span></span>
             </div>
             <div className="url">https://project-preview.com</div>
           </div>
 
-          <div className="markr-product__content">
+          <div className="lesnoise-product__content">
             <h3>A cleaner way to review</h3>
             <p>Clients comment directly on your page.</p>
           </div>
@@ -88,62 +88,62 @@ export default function HomePage() {
   </div>
 </section>
 
-      <section className="markr-stage">
-        <div className="markr-shell">
-          <div className="markr-stage__frame">
-            <div className="markr-stage__chrome">
-              <div className="markr-stage__dots">
+      <section className="lesnoise-stage">
+        <div className="lesnoise-shell">
+          <div className="lesnoise-stage__frame">
+            <div className="lesnoise-stage__chrome">
+              <div className="lesnoise-stage__dots">
                 <span></span>
                 <span></span>
                 <span></span>
               </div>
 
-              <div className="markr-stage__address">https://project-preview.com</div>
+              <div className="lesnoise-stage__address">https://project-preview.com</div>
             </div>
 
-            <div className="markr-stage__surface">
-              <div className="markr-stage__glow"></div>
+            <div className="lesnoise-stage__surface">
+              <div className="lesnoise-stage__glow"></div>
 
-              <div className="markr-stage__page">
-                <div className="markr-stage__badge">Live page</div>
+              <div className="lesnoise-stage__page">
+                <div className="lesnoise-stage__badge">Live page</div>
 
-                <h2 className="markr-stage__headline">
+                <h2 className="lesnoise-stage__headline">
                   A cleaner way to review
                   <br />
                   websites in context.
                 </h2>
 
-                <p className="markr-stage__copy">
+                <p className="lesnoise-stage__copy">
                   Share one review link, let clients click directly on the page,
                   and keep every comment anchored to the right place.
                 </p>
 
-                <div className="markr-stage__line"></div>
-                <div className="markr-stage__line markr-stage__line--short"></div>
+                <div className="lesnoise-stage__line"></div>
+                <div className="lesnoise-stage__line lesnoise-stage__line--short"></div>
 
-                <div className="markr-stage__mini-card">
-                  <span className="markr-stage__mini-label">Section note</span>
+                <div className="lesnoise-stage__mini-card">
+                  <span className="lesnoise-stage__mini-label">Section note</span>
                   <p>Increase spacing above this block.</p>
                 </div>
               </div>
 
-              <button className="markr-pin markr-pin--one" type="button">
+              <button className="lesnoise-pin lesnoise-pin--one" type="button">
                 1
               </button>
-              <button className="markr-pin markr-pin--two" type="button">
+              <button className="lesnoise-pin lesnoise-pin--two" type="button">
                 2
               </button>
-              <button className="markr-pin markr-pin--three" type="button">
+              <button className="lesnoise-pin lesnoise-pin--three" type="button">
                 3
               </button>
 
-              <div className="markr-comment-card">
-                <div className="markr-comment-card__top">
-                  <span className="markr-comment-card__author">Client</span>
-                  <span className="markr-comment-card__tag">Comment</span>
+              <div className="lesnoise-comment-card">
+                <div className="lesnoise-comment-card__top">
+                  <span className="lesnoise-comment-card__author">Client</span>
+                  <span className="lesnoise-comment-card__tag">Comment</span>
                 </div>
 
-                <p className="markr-comment-card__body">
+                <p className="lesnoise-comment-card__body">
                   This headline feels strong. Move the CTA slightly higher so it
                   sits closer to the message.
                 </p>
@@ -153,40 +153,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="markr-value">
-        <div className="markr-shell markr-value__inner">
+      <section className="lesnoise-value">
+        <div className="lesnoise-shell lesnoise-value__inner">
           <p>No screenshots.</p>
           <p>No endless emails.</p>
           <p>No confusion.</p>
 
-          <span className="markr-value__subline">
+          <span className="lesnoise-value__subline">
             Just clear feedback, placed exactly where it belongs.
           </span>
         </div>
       </section>
 
-      <section className="markr-flow">
-        <div className="markr-shell">
-          <p className="markr-flow__text">
+      <section className="lesnoise-flow">
+        <div className="lesnoise-shell">
+          <p className="lesnoise-flow__text">
             Create a review. Share the link. Watch feedback appear directly on
             the page.
           </p>
         </div>
       </section>
 
-      <section className="markr-cta">
-        <div className="markr-shell">
-          <div className="markr-cta__panel">
-            <p className="markr-cta__eyebrow">Ready to start</p>
+      <section className="lesnoise-cta">
+        <div className="lesnoise-shell">
+          <div className="lesnoise-cta__panel">
+            <p className="lesnoise-cta__eyebrow">Ready to start</p>
 
-            <h2 className="markr-cta__title">Start your first review.</h2>
+            <h2 className="lesnoise-cta__title">Start your first review.</h2>
 
-            <p className="markr-cta__subtitle">
+            <p className="lesnoise-cta__subtitle">
               A cleaner way to collect feedback — for designers, developers, and
               clients.
             </p>
 
-            <Link to="/login" className="markr-button markr-button--primary">
+            <Link to="/login" className="lesnoise-button lesnoise-button--primary">
               Start a review
             </Link>
           </div>
