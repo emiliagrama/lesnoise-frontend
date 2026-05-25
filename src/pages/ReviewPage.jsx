@@ -198,54 +198,7 @@ export default function ReviewPage() {
         )}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "12px",
-          marginTop: "28px",
-          marginBottom: "-10px",
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => setWidgetMode("browse")}
-          style={{
-            border: "none",
-            background: "#111827",
-            color: "white",
-            padding: "12px 22px",
-            borderRadius: "999px",
-            fontWeight: "700",
-            cursor: "pointer",
-            fontSize: "14px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-            transition: "all 0.2s ease",
-          }}
-        >
-          Browse
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setWidgetMode("comment")}
-          style={{
-            border: "none",
-            background: "#2563eb",
-            color: "white",
-            padding: "12px 22px",
-            borderRadius: "999px",
-            fontWeight: "700",
-            cursor: "pointer",
-            fontSize: "14px",
-            boxShadow: "0 8px 24px rgba(37,99,235,0.25)",
-            transition: "all 0.2s ease",
-          }}
-        >
-          Comment
-        </button>
-      </div>
+      
 
       <div
         style={{
