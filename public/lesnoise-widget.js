@@ -175,58 +175,136 @@
     });
   }
 
-  function showCommentCard(comment, pin) {
-    document
-      .querySelectorAll(".lesnoise-comment-card")
-      .forEach((card) => card.remove());
+function showCommentCard(comment, pin) {
+  document
+    .querySelectorAll(".lesnoise-comment-card")
+    .forEach((card) => card.remove());
 
-    const rect = pin.getBoundingClientRect();
+  const rect = pin.getBoundingClientRect();
 
-    const card = document.createElement("div");
+  const card = document.createElement("div");
 
-    card.className = "lesnoise-comment-card";
+  card.className = "lesnoise-comment-card";
 
-    card.innerHTML = `
-      <div style="font-weight:700; margin-bottom:6px;">
-        ${comment.author_name || "Client"}
-      </div>
+  card.innerHTML = `
+    <div style="font-weight:700; margin-bottom:6px;">
+      ${comment.author_name || "Client"}
+    </div>
 
-      <div style="font-size:14px; line-height:1.4;">
-        ${comment.body}
-      </div>
-    `;
+    <div
+      class="lesnoise-comment-body"
+      style="font-size:14px; line-height:1.4; margin-bottom:12px;"
+    >
+      ${comment.body}
+    </div>
 
-    card.style.position = "absolute";
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button data-edit>Edit</button>
+      <button data-delete>Delete</button>
+    </div>
+  `;
 
-    card.style.left = `${
-      window.scrollX + rect.left + 36
-    }px`;
+  card.style.position = "absolute";
 
-    card.style.top = `${
-      window.scrollY + rect.top - 8
-    }px`;
+  card.style.left = `${
+    window.scrollX + rect.left + 36
+  }px`;
 
-    card.style.width = "240px";
+  card.style.top = `${
+    window.scrollY + rect.top - 8
+  }px`;
 
-    card.style.background = "white";
+  card.style.width = "240px";
 
-    card.style.color = "#111827";
+  card.style.background = "white";
 
-    card.style.border = "1px solid #e5e7eb";
+  card.style.color = "#111827";
 
-    card.style.borderRadius = "12px";
+  card.style.border = "1px solid #e5e7eb";
 
-    card.style.padding = "12px";
+  card.style.borderRadius = "12px";
 
-    card.style.zIndex = "999999";
+  card.style.padding = "12px";
 
-    card.style.boxShadow =
-      "0 10px 30px rgba(0,0,0,0.2)";
+  card.style.zIndex = "999999";
 
-    card.style.fontFamily = "Arial, sans-serif";
+  card.style.boxShadow =
+    "0 10px 30px rgba(0,0,0,0.2)";
 
-    document.body.appendChild(card);
-  }
+  card.style.fontFamily = "Arial, sans-serif";
+
+  card.querySelector("[data-delete]").addEventListener(
+    "click",
+    async () => {
+      try {
+        await fetch(
+          `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        comments = comments.filter(
+          (c) => c.id !== comment.id
+        );
+
+        card.remove();
+
+        renderComments();
+      } catch (err) {
+        console.error("Delete failed", err);
+      }
+    }
+  );
+
+  card.querySelector("[data-edit]").addEventListener(
+    "click",
+    async () => {
+      const newBody = prompt(
+        "Edit comment",
+        comment.body
+      );
+
+      if (!newBody) return;
+
+      try {
+        const res = await fetch(
+          `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
+          {
+            method: "PATCH",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              comment: {
+                body: newBody,
+              },
+            }),
+          }
+        );
+
+        const updatedComment =
+          await res.json();
+
+        comments = comments.map((c) =>
+          c.id === comment.id
+            ? updatedComment
+            : c
+        );
+
+        renderComments();
+
+        card.remove();
+      } catch (err) {
+        console.error("Edit failed", err);
+      }
+    }
+  );
+
+  document.body.appendChild(card);
+}
 
   function showCommentForm(clickData) {
     document
