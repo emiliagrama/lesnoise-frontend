@@ -1,109 +1,77 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../lib/api";
-import CommentForm from "../components/CommentForm";
-import CommentPin from "../components/CommentPin";
 
 export default function ReviewPage() {
   const { id, shareToken } = useParams();
   const isDeveloperView = Boolean(id);
 
   const [review, setReview] = useState(null);
-  const [comments, setComments] = useState([]);
   const [error, setError] = useState("");
-  const [clickPosition, setClickPosition] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [activeCommentId, setActiveCommentId] = useState(null);
-  const [mode, setMode] = useState("browse");
 
   useEffect(() => {
     const loadReview = async () => {
       try {
-        let reviewRes;
-
-        if (isDeveloperView) {
-          reviewRes = await api.get(`/api/review_sessions/${id}`);
-        } else {
-          reviewRes = await api.get(`/review/${shareToken}`);
-        }
+        const reviewRes = isDeveloperView
+          ? await api.get(`/api/review_sessions/${id}`)
+          : await api.get(`/review/${shareToken}`);
 
         setReview(reviewRes.data);
-
-        const commentsRes = await api.get(
-          `/api/review_sessions/${reviewRes.data.id}/comments`
-        );
-
-        setComments(commentsRes.data);
       } catch (err) {
         console.error("LOAD REVIEW ERROR:", err);
-        setError(`Failed to load review (${err.response?.status || "no status"})`);
+
+        setError(
+          `Failed to load review (${err.response?.status || "no status"})`
+        );
       }
     };
 
     loadReview();
   }, [id, shareToken, isDeveloperView]);
 
-  const handlePageClick = (e) => {
-    if (mode !== "comment") return;
-
-    if (activeCommentId) {
-      setActiveCommentId(null);
-      return;
-    }
-
-    const rect = e.currentTarget.getBoundingClientRect();
-
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-    setClickPosition({ x, y });
-    setShowForm(true);
-  };
-
-  const handleSubmitComment = async (data) => {
-    try {
-      const res = await api.post(
-        `/api/review_sessions/${review.id}/comments`,
-        {
-          comment: {
-            ...data,
-            page_url: review.base_url,
-            page_path: new URL(review.base_url).pathname || "/",
-            viewport_width: window.innerWidth,
-            viewport_height: window.innerHeight,
-          },
-        }
-      );
-
-      setComments((prev) => [...prev, res.data]);
-      setShowForm(false);
-      setClickPosition(null);
-      setActiveCommentId(res.data.id);
-    } catch (err) {
-      console.error("POST COMMENT ERROR:", err);
-      console.error("POST COMMENT RESPONSE:", err.response?.data);
-    }
-  };
-
   const copyClientLink = () => {
     const shareUrl = `${window.location.origin}/review/${review.share_token}`;
+
     navigator.clipboard.writeText(shareUrl);
+
     alert("Client review link copied");
   };
 
   const copyInstallSnippet = () => {
-    navigator.clipboard.writeText(
-      `<script src="${window.location.origin}/lesnoise-widget.js"></script>`
-    );
+    const snippet = `<script src="${window.location.origin}/lesnoise-widget.js"></script>
+
+<script>
+  Lesnoise.init({
+    reviewToken: "${review.share_token}"
+  });
+</script>`;
+
+    navigator.clipboard.writeText(snippet);
+
     alert("Install snippet copied");
   };
 
+  const setWidgetMode = (mode) => {
+    const iframe = document.getElementById(
+      "lesnoise-review-iframe"
+    );
+
+    if (!iframe || !iframe.contentWindow) return;
+
+    iframe.contentWindow.postMessage(
+      {
+        type: "LESNOISE_MODE",
+        mode,
+      },
+      "*"
+    );
+  };
+
   if (error) return <div>{error}</div>;
+
   if (!review) return <div>Loading...</div>;
 
-  const activeComment = comments.find(
-    (comment) => comment.id === activeCommentId
-  );
+  const reviewUrl = `${review.base_url}?lesnoise_review=${review.share_token}`;
 
   return (
     <div
@@ -126,7 +94,9 @@ export default function ReviewPage() {
             display: "inline-block",
             padding: "6px 12px",
             borderRadius: "999px",
-            background: isDeveloperView ? "#111827" : "#2563eb",
+            background: isDeveloperView
+              ? "#111827"
+              : "#2563eb",
             color: "white",
             fontSize: "12px",
             fontWeight: "700",
@@ -135,12 +105,16 @@ export default function ReviewPage() {
             letterSpacing: "0.08em",
           }}
         >
-          {isDeveloperView ? "Developer view" : "Client view"}
+          {isDeveloperView
+            ? "Developer view"
+            : "Client view"}
         </div>
 
         <h1>{review.name}</h1>
 
-        <p style={{ color: "#6b7280" }}>{review.base_url}</p>
+        <p style={{ color: "#6b7280" }}>
+          {review.base_url}
+        </p>
 
         {isDeveloperView && (
           <div
@@ -156,121 +130,121 @@ export default function ReviewPage() {
               padding: "24px",
             }}
           >
-            <h2 style={{ marginTop: 0 }}>Install lesnoise on this website</h2>
+            <h2 style={{ marginTop: 0 }}>
+              Install Lesnoise on this website
+            </h2>
 
-            <p style={{ color: "#6b7280", lineHeight: "1.6" }}>
-              Add this snippet once to the website you want reviewed. After that,
-              clients can leave comments directly on the site without creating an
-              account.
-            </p>
-
-            <ol
+            <p
               style={{
-                color: "#374151",
-                lineHeight: "1.8",
-                paddingLeft: "20px",
+                color: "#6b7280",
+                lineHeight: "1.6",
               }}
             >
-              <li>Copy the code below.</li>
+              For comments to stay glued to the
+              real page while scrolling, the
+              widget must be installed inside the
+              reviewed website.
+            </p>
 
-              <pre
-                style={{
-                  background: "#111827",
-                  color: "#e5e7eb",
-                  padding: "16px",
-                  borderRadius: "12px",
-                  overflowX: "auto",
-                  fontSize: "13px",
-                  lineHeight: "1.5",
-                }}
-              >
-              {`<script src="${window.location.origin}/lesnoise-widget.js"></script>
+            <pre
+              style={{
+                background: "#111827",
+                color: "#e5e7eb",
+                padding: "16px",
+                borderRadius: "12px",
+                overflowX: "auto",
+                fontSize: "13px",
+                lineHeight: "1.5",
+              }}
+            >
+{`<script src="${window.location.origin}/lesnoise-widget.js"></script>
 
-              <script>
-                Lesnoise.init({
-                  reviewToken: "${review.share_token}"
-                });
-              </script>`}
-              </pre>
+<script>
+  Lesnoise.init({
+    reviewToken: "${review.share_token}"
+  });
+</script>`}
+            </pre>
 
-              <button type="button" onClick={copyInstallSnippet}>
-                Copy install snippet
-              </button>
+            <button
+              type="button"
+              onClick={copyInstallSnippet}
+            >
+              Copy install snippet
+            </button>
 
-              <li>
-                Paste it before the closing <code>&lt;/body&gt;</code> tag in
-                your main layout file.
-              </li>
-              <li>Deploy your website.</li>
-              <li>Send the client review link to your client.</li>
-            </ol>
-
-            <p style={{ color: "#6b7280", marginTop: "16px", fontSize: "14px" }}>
+            <p
+              style={{
+                color: "#6b7280",
+                marginTop: "16px",
+                fontSize: "14px",
+              }}
+            >
               Client link:
               <br />
               <code>
-                {window.location.origin}/review/{review.share_token}
+                {window.location.origin}/review/
+                {review.share_token}
               </code>
             </p>
 
-            <button type="button" onClick={copyClientLink}>
+            <button
+              type="button"
+              onClick={copyClientLink}
+            >
               Copy client review link
             </button>
           </div>
         )}
+      </div>
 
-        <div
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "12px",
+          marginTop: "28px",
+          marginBottom: "-10px",
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setWidgetMode("browse")}
           style={{
-            marginTop: "18px",
-            display: "flex",
-            justifyContent: "center",
-            gap: "12px",
+            border: "none",
+            background: "#111827",
+            color: "white",
+            padding: "12px 22px",
+            borderRadius: "999px",
+            fontWeight: "700",
+            cursor: "pointer",
+            fontSize: "14px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+            transition: "all 0.2s ease",
           }}
         >
-          <button
-            type="button"
-            onClick={() => {
-              setMode("browse");
-              setShowForm(false);
-              setClickPosition(null);
-            }}
-            style={{
-              padding: "10px 16px",
-              borderRadius: "999px",
-              border:
-                mode === "browse" ? "1px solid #111827" : "1px solid #d1d5db",
-              background: mode === "browse" ? "#111827" : "#ffffff",
-              color: mode === "browse" ? "#ffffff" : "#111827",
-              cursor: "pointer",
-              fontWeight: "700",
-            }}
-          >
-            Browse site
-          </button>
+          Browse
+        </button>
 
-          <button
-            type="button"
-            onClick={() => setMode("comment")}
-            style={{
-              padding: "10px 16px",
-              borderRadius: "999px",
-              border:
-                mode === "comment" ? "1px solid #2563eb" : "1px solid #d1d5db",
-              background: mode === "comment" ? "#2563eb" : "#ffffff",
-              color: mode === "comment" ? "#ffffff" : "#111827",
-              cursor: "pointer",
-              fontWeight: "700",
-            }}
-          >
-            Leave comment
-          </button>
-        </div>
-
-        <p style={{ color: "#6b7280", marginTop: "12px" }}>
-          {mode === "browse"
-            ? "Browse the website normally. Switch to comment mode when you want to leave feedback."
-            : "Click anywhere on the page to leave feedback."}
-        </p>
+        <button
+          type="button"
+          onClick={() => setWidgetMode("comment")}
+          style={{
+            border: "none",
+            background: "#2563eb",
+            color: "white",
+            padding: "12px 22px",
+            borderRadius: "999px",
+            fontWeight: "700",
+            cursor: "pointer",
+            fontSize: "14px",
+            boxShadow: "0 8px 24px rgba(37,99,235,0.25)",
+            transition: "all 0.2s ease",
+          }}
+        >
+          Comment
+        </button>
       </div>
 
       <div
@@ -282,100 +256,26 @@ export default function ReviewPage() {
       >
         <div
           style={{
-            position: "relative",
-            width: "900px",
+            width: "90vw",
+            maxWidth: "1200px",
             height: "80vh",
             borderRadius: "12px",
             overflow: "hidden",
             background: "#fff",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+            boxShadow:
+              "0 10px 40px rgba(0,0,0,0.1)",
           }}
         >
           <iframe
-            src={review.base_url}
+            id="lesnoise-review-iframe"
+            src={reviewUrl}
             title="Reviewed website"
             style={{
               width: "100%",
               height: "100%",
               border: "none",
-              pointerEvents: mode === "browse" ? "auto" : "none",
             }}
           />
-
-          <div
-            onClick={handlePageClick}
-            style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 10,
-              pointerEvents: mode === "comment" ? "auto" : "none",
-            }}
-          >
-            {comments.map((comment, index) => (
-              <CommentPin
-                key={comment.id}
-                comment={{ ...comment, displayNumber: index + 1 }}
-                isActive={activeCommentId === comment.id}
-                onClick={setActiveCommentId}
-              />
-            ))}
-
-            {activeComment && (
-              <div
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  position: "absolute",
-                  left: `${Number(activeComment.x_percent)}%`,
-                  top: `${Number(activeComment.y_percent)}%`,
-                  transform: "translate(-50%, -120%)",
-                  background: "white",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  width: "240px",
-                  zIndex: 2000,
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                  pointerEvents: "auto",
-                }}
-              >
-                <div style={{ fontWeight: "bold", marginBottom: "6px" }}>
-                  {activeComment.author_name}
-                </div>
-
-                <div style={{ fontSize: "14px", lineHeight: "1.4" }}>
-                  {activeComment.body}
-                </div>
-              </div>
-            )}
-
-            {showForm && clickPosition && (
-              <>
-                <div
-                  style={{
-                    position: "absolute",
-                    left: `${clickPosition.x}%`,
-                    top: `${clickPosition.y}%`,
-                    transform: "translate(-50%, -50%)",
-                    width: "14px",
-                    height: "14px",
-                    borderRadius: "50%",
-                    background: "#2563eb",
-                    zIndex: 1500,
-                  }}
-                />
-
-                <CommentForm
-                  position={clickPosition}
-                  pageUrl={review.base_url}
-                  onSubmit={handleSubmitComment}
-                  onClose={() => {
-                    setShowForm(false);
-                    setClickPosition(null);
-                  }}
-                />
-              </>
-            )}
-          </div>
         </div>
       </div>
     </div>

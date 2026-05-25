@@ -10,12 +10,7 @@
 
   window.Lesnoise.init = function (options = {}) {
     reviewToken = options.reviewToken;
-
-    if (!reviewToken) {
-      console.warn("Lesnoise: missing reviewToken");
-      return;
-    }
-
+    if (!reviewToken) return console.warn("Lesnoise: missing reviewToken");
     boot();
   };
 
@@ -28,76 +23,21 @@
   }
 
   function boot() {
-    if (document.getElementById("lesnoise-toolbar")) return;
-
-    createToolbar();
-    createOverlay();
+    document.addEventListener("click", handlePageClick, true);
     setMode("browse");
     loadReviewAndComments();
   }
 
-  let toolbar;
-  let overlay;
-
-  function createToolbar() {
-    toolbar = document.createElement("div");
-    toolbar.id = "lesnoise-toolbar";
-    toolbar.style.position = "fixed";
-    toolbar.style.top = "20px";
-    toolbar.style.right = "20px";
-    toolbar.style.zIndex = "999999";
-    toolbar.style.background = "#111827";
-    toolbar.style.color = "white";
-    toolbar.style.padding = "12px";
-    toolbar.style.borderRadius = "999px";
-    toolbar.style.fontFamily = "Arial, sans-serif";
-    toolbar.style.display = "flex";
-    toolbar.style.gap = "8px";
-
-    const browseBtn = document.createElement("button");
-    browseBtn.innerText = "Browse";
-    browseBtn.style.padding = "8px 12px";
-
-    const commentBtn = document.createElement("button");
-    commentBtn.innerText = "Comment";
-    commentBtn.style.padding = "8px 12px";
-
-    browseBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      setMode("browse");
-    });
-
-    commentBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      setMode("comment");
-    });
-
-    toolbar.appendChild(browseBtn);
-    toolbar.appendChild(commentBtn);
-    document.body.appendChild(toolbar);
-  }
-
-  function createOverlay() {
-    overlay = document.createElement("div");
-    overlay.id = "lesnoise-overlay";
-    overlay.style.position = "absolute";
-    overlay.style.top = "0";
-    overlay.style.left = "0";
-    overlay.style.width = "100%";
-    overlay.style.height = `${document.documentElement.scrollHeight}px`;
-    overlay.style.zIndex = "999998";
-    overlay.style.pointerEvents = "none";
-
-    overlay.addEventListener("click", handleOverlayClick);
-
-    document.body.appendChild(overlay);
-  }
-
   function setMode(newMode) {
     mode = newMode;
-    overlay.style.pointerEvents = mode === "comment" ? "auto" : "none";
     document.body.style.cursor = mode === "comment" ? "crosshair" : "default";
   }
+
+  window.addEventListener("message", function (event) {
+    if (event.data && event.data.type === "LESNOISE_MODE") {
+      setMode(event.data.mode);
+    }
+  });
 
   async function loadReviewAndComments() {
     try {
@@ -109,76 +49,149 @@
       );
 
       comments = await commentsRes.json();
-      updateOverlaySize();
       renderComments();
     } catch (err) {
       console.error("Lesnoise: failed to load review/comments", err);
     }
   }
 
-  function renderPin(comment, index) {
-    const pin = document.createElement("button");
-    pin.className = "lesnoise-pin";
-    pin.innerText = String(index + 1);
+  function getElementSelector(el) {
+    if (!el || el === document.body) return "body";
+    if (el.id) return `#${el.id}`;
 
-    pin.style.position = "absolute";
-    pin.style.left = `${comment.x_percent}%`;
-    pin.style.top = `${comment.y_document}px`;
-    pin.style.transform = "translate(-50%, -50%)";
-    pin.style.width = "28px";
-    pin.style.height = "28px";
-    pin.style.borderRadius = "50%";
-    pin.style.border = "none";
-    pin.style.background = "#2563eb";
-    pin.style.color = "white";
-    pin.style.fontWeight = "700";
-    pin.style.cursor = "pointer";
-    pin.style.zIndex = "999999";
+    const path = [];
 
-    pin.addEventListener("click", function (e) {
-      e.stopPropagation();
-      alert(`${comment.author_name}: ${comment.body}`);
-    });
+    while (el && el.nodeType === Node.ELEMENT_NODE && el !== document.body) {
+      let selector = el.nodeName.toLowerCase();
 
-    overlay.appendChild(pin);
+      if (el.className && typeof el.className === "string") {
+        const className = el.className.trim().split(/\s+/)[0];
+        if (className) selector += `.${className}`;
+      }
+
+      path.unshift(selector);
+      el = el.parentElement;
+    }
+
+    return path.join(" > ");
   }
 
   function renderComments() {
-    overlay.querySelectorAll(".lesnoise-pin").forEach((pin) => pin.remove());
+    document.querySelectorAll(".lesnoise-pin").forEach((pin) => pin.remove());
 
     comments.forEach((comment, index) => {
-      if (comment.page_path === window.location.pathname) {
-        renderPin(comment, index);
-      }
+      if (comment.page_path !== window.location.pathname) return;
+
+      const target = document.querySelector(comment.element_selector);
+      if (!target) return;
+
+      const rect = target.getBoundingClientRect();
+      const pin = document.createElement("button");
+
+      pin.className = "lesnoise-pin";
+      pin.innerText = String(index + 1);
+
+      pin.style.position = "absolute";
+      pin.style.left = `${
+        window.scrollX + rect.left + Number(comment.x_element)
+      }px`;
+      pin.style.top = `${
+        window.scrollY + rect.top + Number(comment.y_element)
+      }px`;
+      pin.style.transform = "translate(-50%, -50%)";
+      pin.style.width = "28px";
+      pin.style.height = "28px";
+      pin.style.borderRadius = "50%";
+      pin.style.border = "none";
+      pin.style.background = "#2563eb";
+      pin.style.color = "white";
+      pin.style.fontWeight = "700";
+      pin.style.cursor = "pointer";
+      pin.style.zIndex = "999998";
+      pin.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+
+      pin.addEventListener("click", function (e) {
+        e.stopPropagation();
+        showCommentCard(comment, pin);
+      });
+
+      document.body.appendChild(pin);
     });
   }
 
-  async function handleOverlayClick(e) {
+  function showCommentCard(comment, pin) {
+    document
+      .querySelectorAll(".lesnoise-comment-card")
+      .forEach((card) => card.remove());
+
+    const rect = pin.getBoundingClientRect();
+
+    const card = document.createElement("div");
+    card.className = "lesnoise-comment-card";
+
+    card.innerHTML = `
+      <div style="font-weight: 700; margin-bottom: 6px;">
+        ${comment.author_name || "Client"}
+      </div>
+      <div style="font-size: 14px; line-height: 1.4;">
+        ${comment.body}
+      </div>
+    `;
+
+    card.style.position = "absolute";
+    card.style.left = `${window.scrollX + rect.left + 36}px`;
+    card.style.top = `${window.scrollY + rect.top - 8}px`;
+    card.style.width = "240px";
+    card.style.background = "white";
+    card.style.color = "#111827";
+    card.style.border = "1px solid #e5e7eb";
+    card.style.borderRadius = "12px";
+    card.style.padding = "12px";
+    card.style.zIndex = "999999";
+    card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+    card.style.fontFamily = "Arial, sans-serif";
+
+    document.body.appendChild(card);
+  }
+
+  async function handlePageClick(e) {
     if (mode !== "comment") return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    if (!target) return;
 
     const body = prompt("Write your comment:");
     if (!body) return;
 
-    const xPercent = (e.pageX / document.documentElement.scrollWidth) * 100;
-    const yDocument = e.pageY;
+    const rect = target.getBoundingClientRect();
+    const elementSelector = getElementSelector(target);
+
+    const xElement = e.clientX - rect.left;
+    const yElement = e.clientY - rect.top;
 
     try {
       const res = await fetch(
         `${API_URL}/api/review_sessions/${review.id}/comments`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             comment: {
               body,
               author_name: "Client",
               page_url: window.location.href,
               page_path: window.location.pathname,
-              x_percent: xPercent,
-              y_percent: (e.pageY / document.documentElement.scrollHeight) * 100,
-              y_document: yDocument,
+              x_percent: (e.pageX / document.documentElement.scrollWidth) * 100,
+              y_percent:
+                (e.pageY / document.documentElement.scrollHeight) * 100,
+              x_document: e.pageX,
+              y_document: e.pageY,
+              element_selector: elementSelector,
+              x_element: xElement,
+              y_element: yElement,
               viewport_width: window.innerWidth,
               viewport_height: window.innerHeight,
             },
@@ -196,12 +209,7 @@
     }
   }
 
-  function updateOverlaySize() {
-    overlay.style.height = `${document.documentElement.scrollHeight}px`;
-  }
-
-  window.addEventListener("resize", function () {
-    updateOverlaySize();
-    renderComments();
-  });
+  window.addEventListener("resize", renderComments);
+  window.addEventListener("scroll", renderComments);
+  window.addEventListener("load", renderComments);
 })();
