@@ -71,8 +71,10 @@ export default function ReviewPage() {
 
   if (!review) return <div>Loading...</div>;
 
-  const reviewUrl = `${review.base_url}?lesnoise_review=${review.share_token}`;
-
+  const reviewUrl = `${review.base_url}?lesnoise_review=${review.share_token}&lesnoise_role=${
+    isDeveloperView ? "developer" : "client"
+  }`;
+  
   return (
     <div
       style={{

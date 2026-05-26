@@ -8,6 +8,7 @@
   let comments = [];
   let cableSocket = null;
   let cableIdentifier = null;
+  let currentRole = "client";
 
   window.Lesnoise = window.Lesnoise || {};
 
@@ -23,6 +24,11 @@
 
   const params = new URLSearchParams(window.location.search);
   const tokenFromUrl = params.get("lesnoise_review");
+  const roleFromUrl = params.get("lesnoise_role");
+
+  if (roleFromUrl === "developer") {
+    currentRole = "developer";
+  }
 
   if (tokenFromUrl) {
     reviewToken = tokenFromUrl;
@@ -180,9 +186,16 @@
 
       pin.style.borderRadius = "50%";
       pin.style.border = "none";
+      pin.style.display = "flex";
+      pin.style.alignItems = "center";
+      pin.style.justifyContent = "center";
+      pin.style.transition =
+        "transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease";
 
-      if (comment.author_type === "developer") {
-        pin.style.background = "#111827";
+      if (comment.resolved) {
+        pin.style.background = "#747c8b";
+      } else if (comment.author_type === "developer") {
+        pin.style.background = "#36c0ca";
       } else {
         pin.style.background = "#2563eb";
       }
@@ -194,8 +207,11 @@
 
       pin.style.zIndex = "999998";
 
-      pin.style.boxShadow =
-        "0 4px 12px rgba(0,0,0,0.2)";
+      pin.style.boxShadow = comment.resolved
+        ? "0 4px 12px rgba(0,0,0,0.08)"
+        : "0 6px 18px rgba(37,99,235,0.35)";
+
+      pin.style.opacity = comment.resolved ? "0.6" : "1";
 
       pin.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -204,17 +220,26 @@
       });
 
       document.body.appendChild(pin);
+      pin.addEventListener("mouseenter", function () {
+      pin.style.transform =
+        "translate(-50%, -50%) scale(1.15)";
+      });
+
+      pin.addEventListener("mouseleave", function () {
+        pin.style.transform =
+          "translate(-50%, -50%) scale(1)";
+      });
     });
   }
 
 function showCommentCard(comment, pin) {
   closeCommentForms();
+
   document
     .querySelectorAll(".lesnoise-comment-card")
     .forEach((card) => card.remove());
 
   const rect = pin.getBoundingClientRect();
-
   const card = document.createElement("div");
 
   card.className = "lesnoise-comment-card";
@@ -232,48 +257,42 @@ function showCommentCard(comment, pin) {
     </div>
 
     <div style="display:flex; gap:8px; justify-content:flex-end;">
-      <button data-resolve>
-        ${comment.resolved ? "Reopen" : "Resolve"}
-      </button>
+      ${
+        currentRole === "developer" || comment.resolved
+          ? `<button data-resolve>
+              ${comment.resolved ? "Reopen" : "Resolve"}
+            </button>`
+          : ""
+      }
 
-      <button data-edit>Edit</button>
-
-      <button data-delete>Delete</button>
+      ${
+        comment.author_type === currentRole
+          ? `
+            <button data-edit>Edit</button>
+            <button data-delete>Delete</button>
+          `
+          : ""
+      }
     </div>
   `;
 
   card.style.position = "absolute";
-
-  card.style.left = `${
-    window.scrollX + rect.left + 36
-  }px`;
-
-  card.style.top = `${
-    window.scrollY + rect.top - 8
-  }px`;
-
+  card.style.left = `${window.scrollX + rect.left + 36}px`;
+  card.style.top = `${window.scrollY + rect.top - 8}px`;
   card.style.width = "240px";
-
   card.style.background = "white";
-
   card.style.color = "#111827";
-
   card.style.border = "1px solid #e5e7eb";
-
   card.style.borderRadius = "12px";
-
   card.style.padding = "12px";
-
   card.style.zIndex = "999999";
-
-  card.style.boxShadow =
-    "0 10px 30px rgba(0,0,0,0.2)";
-
+  card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
   card.style.fontFamily = "Arial, sans-serif";
 
-  card.querySelector("[data-edit]").addEventListener(
-    "click",
-    () => {
+  const editButton = card.querySelector("[data-edit]");
+
+  if (editButton) {
+    editButton.addEventListener("click", () => {
       const bodyEl = card.querySelector(".lesnoise-comment-body");
 
       bodyEl.innerHTML = `
@@ -291,63 +310,51 @@ function showCommentCard(comment, pin) {
       const textarea = bodyEl.querySelector("[data-edit-body]");
       textarea.focus();
 
-      bodyEl
-        .querySelector("[data-cancel-edit]")
-        .addEventListener("click", () => {
-          bodyEl.innerHTML = comment.body;
-        });
+      bodyEl.querySelector("[data-cancel-edit]").addEventListener("click", () => {
+        bodyEl.innerHTML = comment.body;
+      });
 
-      bodyEl
-        .querySelector("[data-save-edit]")
-        .addEventListener("click", async () => {
-          const newBody = textarea.value.trim();
+      bodyEl.querySelector("[data-save-edit]").addEventListener("click", async () => {
+        const newBody = textarea.value.trim();
+        if (!newBody) return;
 
-          if (!newBody) return;
+        try {
+          const res = await fetch(
+            `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                comment: { body: newBody },
+              }),
+            }
+          );
 
-          try {
-            const res = await fetch(
-              `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
-              {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  comment: {
-                    body: newBody,
-                  },
-                }),
-              }
-            );
+          const updatedComment = await res.json();
 
-            const updatedComment = await res.json();
+          comments = comments.map((c) =>
+            c.id === comment.id ? updatedComment : c
+          );
 
-            comments = comments.map((c) =>
-              c.id === comment.id ? updatedComment : c
-            );
+          renderComments();
+          card.remove();
+        } catch (err) {
+          console.error("Edit failed", err);
+        }
+      });
+    });
+  }
 
-            renderComments();
-            card.remove();
-          } catch (err) {
-            console.error("Edit failed", err);
-          }
-        });
-    }
-  );
+  const resolveButton = card.querySelector("[data-resolve]");
 
-  card.querySelector("[data-resolve]").addEventListener(
-    "click",
-    async () => {
+  if (resolveButton) {
+    resolveButton.addEventListener("click", async () => {
       try {
         const res = await fetch(
           `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
           {
             method: "PATCH",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               comment: {
                 resolved: !comment.resolved,
@@ -359,23 +366,21 @@ function showCommentCard(comment, pin) {
         const updatedComment = await res.json();
 
         comments = comments.map((c) =>
-          c.id === comment.id
-            ? updatedComment
-            : c
+          c.id === comment.id ? updatedComment : c
         );
 
         renderComments();
-
         card.remove();
       } catch (err) {
         console.error("Resolve failed", err);
       }
-    }
-  );
+    });
+  }
 
-  card.querySelector("[data-delete]").addEventListener(
-    "click",
-    async () => {
+  const deleteButton = card.querySelector("[data-delete]");
+
+  if (deleteButton) {
+    deleteButton.addEventListener("click", async () => {
       try {
         await fetch(
           `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
@@ -384,18 +389,15 @@ function showCommentCard(comment, pin) {
           }
         );
 
-        comments = comments.filter(
-          (c) => c.id !== comment.id
-        );
+        comments = comments.filter((c) => c.id !== comment.id);
 
         renderComments();
-
         card.remove();
       } catch (err) {
         console.error("Delete failed", err);
       }
-    }
-  );
+    });
+  }
 
   document.body.appendChild(card);
 }
@@ -467,8 +469,12 @@ function showCommentCard(comment, pin) {
             comment: {
               body,
 
-              author_name: "Client",
-              author_type: "client",
+            author_name:
+              currentRole === "developer"
+                ? "Developer"
+                : "Client",
+
+            author_type: currentRole,
 
               page_url: window.location.href,
 
