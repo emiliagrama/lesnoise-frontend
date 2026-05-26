@@ -262,75 +262,70 @@ function showCommentCard(comment, pin) {
 
   card.style.fontFamily = "Arial, sans-serif";
 
-  card.querySelector("[data-delete]").addEventListener(
-    "click",
-    async () => {
-      try {
-        await fetch(
-          `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        comments = comments.filter(
-          (c) => c.id !== comment.id
-        );
-
-        card.remove();
-
-        renderComments();
-      } catch (err) {
-        console.error("Delete failed", err);
-      }
-    }
-  );
-
   card.querySelector("[data-edit]").addEventListener(
     "click",
-    async () => {
-      const newBody = prompt(
-        "Edit comment",
-        comment.body
-      );
+    () => {
+      const bodyEl = card.querySelector(".lesnoise-comment-body");
 
-      if (!newBody) return;
+      bodyEl.innerHTML = `
+        <textarea
+          data-edit-body
+          style="width:100%; min-height:80px; border:1px solid #d1d5db; border-radius:10px; padding:10px; font-size:14px;"
+        >${comment.body}</textarea>
 
-      try {
-        const res = await fetch(
-          `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
-          {
-            method: "PATCH",
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
+          <button type="button" data-cancel-edit>Cancel</button>
+          <button type="button" data-save-edit>Save</button>
+        </div>
+      `;
 
-            headers: {
-              "Content-Type": "application/json",
-            },
+      const textarea = bodyEl.querySelector("[data-edit-body]");
+      textarea.focus();
 
-            body: JSON.stringify({
-              comment: {
-                body: newBody,
-              },
-            }),
+      bodyEl
+        .querySelector("[data-cancel-edit]")
+        .addEventListener("click", () => {
+          bodyEl.innerHTML = comment.body;
+        });
+
+      bodyEl
+        .querySelector("[data-save-edit]")
+        .addEventListener("click", async () => {
+          const newBody = textarea.value.trim();
+
+          if (!newBody) return;
+
+          try {
+            const res = await fetch(
+              `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  comment: {
+                    body: newBody,
+                  },
+                }),
+              }
+            );
+
+            const updatedComment = await res.json();
+
+            comments = comments.map((c) =>
+              c.id === comment.id ? updatedComment : c
+            );
+
+            renderComments();
+            card.remove();
+          } catch (err) {
+            console.error("Edit failed", err);
           }
-        );
-
-        const updatedComment =
-          await res.json();
-
-        comments = comments.map((c) =>
-          c.id === comment.id
-            ? updatedComment
-            : c
-        );
-
-        renderComments();
-
-        card.remove();
-      } catch (err) {
-        console.error("Edit failed", err);
-      }
+        });
     }
   );
+
 
   document.body.appendChild(card);
 }
