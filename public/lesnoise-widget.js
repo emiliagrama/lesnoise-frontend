@@ -1,10 +1,13 @@
 (function () {
   const API_URL = "http://localhost:3000";
+  const CABLE_URL = "ws://127.0.0.1:3000/cable";
 
   let reviewToken = null;
   let review = null;
   let mode = "comment";
   let comments = [];
+  let cableSocket = null;
+  let cableIdentifier = null;
 
   window.Lesnoise = window.Lesnoise || {};
 
@@ -28,6 +31,7 @@
 
   function boot() {
     document.addEventListener("click", handlePageClick, true);
+    document.addEventListener("keydown", handleEscapeKey);
 
     setMode("comment");
 
@@ -62,11 +66,35 @@
       comments = await commentsRes.json();
 
       renderComments();
+
+      subscribeToReviewSession();
+
+      renderComments();
     } catch (err) {
       console.error(
         "Lesnoise: failed to load review/comments",
         err
       );
+    }
+  }
+
+  function closeCommentCards() {
+    document
+      .querySelectorAll(".lesnoise-comment-card")
+      .forEach((card) => card.remove());
+  }
+
+  function closeCommentForms() {
+  document
+    .querySelectorAll(".lesnoise-comment-form")
+    .forEach((form) => form.remove());
+  }
+
+  function handleEscapeKey(e) {
+    if (e.key === "Escape") {
+      closeCommentCards();
+
+      closeCommentForms();
     }
   }
 
@@ -176,6 +204,7 @@
   }
 
 function showCommentCard(comment, pin) {
+  closeCommentForms();
   document
     .querySelectorAll(".lesnoise-comment-card")
     .forEach((card) => card.remove());
@@ -417,10 +446,12 @@ function showCommentCard(comment, pin) {
         }
       );
 
-      const savedComment =
-        await res.json();
+      const savedComment = await res.json();
 
-      comments.push(savedComment);
+      comments = [
+        ...comments.filter((c) => c.id !== savedComment.id),
+        savedComment,
+      ];
 
       renderComments();
 
@@ -434,6 +465,16 @@ function showCommentCard(comment, pin) {
   }
 
 async function handlePageClick(e) {
+  const clickedInsideLesnoise =
+    e.target.closest(".lesnoise-comment-card") ||
+    e.target.closest(".lesnoise-pin") ||
+    e.target.closest(".lesnoise-comment-form");
+
+  if (!clickedInsideLesnoise) {
+    closeCommentCards();
+    closeCommentForms();
+  }
+
   if (mode !== "comment") return;
 
   if (
@@ -476,4 +517,72 @@ async function handlePageClick(e) {
 window.addEventListener("resize", renderComments);
 window.addEventListener("scroll", renderComments);
 window.addEventListener("load", renderComments);
+
+function subscribeToReviewSession() {
+  if (!review || cableSocket) return;
+
+  cableIdentifier = JSON.stringify({
+    channel: "ReviewSessionChannel",
+    review_session_id: review.id,
+  });
+
+  cableSocket = new WebSocket(CABLE_URL);
+
+  cableSocket.onopen = function () {
+    cableSocket.send(
+      JSON.stringify({
+        command: "subscribe",
+        identifier: cableIdentifier,
+      })
+    );
+  };
+
+  cableSocket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+
+    if (
+      data.type === "welcome" ||
+      data.type === "ping" ||
+      data.type === "confirm_subscription"
+    ) {
+      return;
+    }
+
+    if (!data.message) return;
+
+    handleRealtimeComment(data.message);
+  };
+
+  cableSocket.onerror = function (error) {
+    console.error("Lesnoise websocket error:", error);
+  };
+
+  cableSocket.onclose = function () {
+    cableSocket = null;
+  };
+}
+
+function handleRealtimeComment(event) {
+  if (event.action === "created") {
+    comments = [
+      ...comments.filter((c) => c.id !== event.comment.id),
+      event.comment,
+    ];
+  }
+
+  if (event.action === "updated") {
+    comments = comments.map((comment) =>
+      comment.id === event.comment.id ? event.comment : comment
+    );
+  }
+
+  if (event.action === "deleted") {
+    comments = comments.filter(
+      (comment) => comment.id !== event.comment_id
+    );
+  }
+
+  renderComments();
+}
+
 })();
