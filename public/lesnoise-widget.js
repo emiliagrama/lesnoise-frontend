@@ -181,7 +181,11 @@
       pin.style.borderRadius = "50%";
       pin.style.border = "none";
 
-      pin.style.background = "#2563eb";
+      if (comment.author_type === "developer") {
+        pin.style.background = "#111827";
+      } else {
+        pin.style.background = "#2563eb";
+      }
       pin.style.color = "white";
 
       pin.style.fontWeight = "700";
@@ -464,6 +468,7 @@ function showCommentCard(comment, pin) {
               body,
 
               author_name: "Client",
+              author_type: "client",
 
               page_url: window.location.href,
 
