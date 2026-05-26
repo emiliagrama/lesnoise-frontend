@@ -228,7 +228,12 @@ function showCommentCard(comment, pin) {
     </div>
 
     <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button data-resolve>
+        ${comment.resolved ? "Reopen" : "Resolve"}
+      </button>
+
       <button data-edit>Edit</button>
+
       <button data-delete>Delete</button>
     </div>
   `;
@@ -326,6 +331,67 @@ function showCommentCard(comment, pin) {
     }
   );
 
+  card.querySelector("[data-resolve]").addEventListener(
+    "click",
+    async () => {
+      try {
+        const res = await fetch(
+          `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
+          {
+            method: "PATCH",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              comment: {
+                resolved: !comment.resolved,
+              },
+            }),
+          }
+        );
+
+        const updatedComment = await res.json();
+
+        comments = comments.map((c) =>
+          c.id === comment.id
+            ? updatedComment
+            : c
+        );
+
+        renderComments();
+
+        card.remove();
+      } catch (err) {
+        console.error("Resolve failed", err);
+      }
+    }
+  );
+
+  card.querySelector("[data-delete]").addEventListener(
+    "click",
+    async () => {
+      try {
+        await fetch(
+          `${API_URL}/api/review_sessions/${review.id}/comments/${comment.id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        comments = comments.filter(
+          (c) => c.id !== comment.id
+        );
+
+        renderComments();
+
+        card.remove();
+      } catch (err) {
+        console.error("Delete failed", err);
+      }
+    }
+  );
 
   document.body.appendChild(card);
 }
