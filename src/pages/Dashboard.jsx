@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../lib/api";
 
 export default function Dashboard() {
@@ -6,6 +6,71 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
+  const socketsRef = useRef([]);
+
+useEffect(() => {
+  if (reviews.length === 0) return;
+
+  socketsRef.current.forEach((socket) => socket.close());
+  socketsRef.current = [];
+
+  reviews.forEach((review) => {
+    const socket = new WebSocket("ws://127.0.0.1:3000/cable");
+
+    const identifier = JSON.stringify({
+      channel: "ReviewSessionChannel",
+      review_session_id: review.id,
+    });
+
+    socket.onopen = () => {
+      socket.send(
+        JSON.stringify({
+          command: "subscribe",
+          identifier,
+        })
+      );
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      if (
+        data.type === "welcome" ||
+        data.type === "ping" ||
+        data.type === "confirm_subscription"
+      ) {
+        return;
+      }
+
+      if (!data.message) return;
+
+      if (typeof data.message.unresolved_comments_count !== "number") return;
+
+      setReviews((prevReviews) =>
+        prevReviews.map((currentReview) =>
+          currentReview.id === review.id
+            ? {
+                ...currentReview,
+                unresolved_comments_count:
+                  data.message.unresolved_comments_count,
+              }
+            : currentReview
+        )
+      );
+    };
+
+    socket.onerror = (error) => {
+      console.error("Dashboard websocket error:", error);
+    };
+
+    socketsRef.current.push(socket);
+  });
+
+  return () => {
+    socketsRef.current.forEach((socket) => socket.close());
+    socketsRef.current = [];
+  };
+}, [reviews.length]);
 
   useEffect(() => {
     api
