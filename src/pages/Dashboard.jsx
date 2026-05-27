@@ -6,7 +6,10 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
   const socketsRef = useRef([]);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
 useEffect(() => {
   if (reviews.length === 0) return;
@@ -90,6 +93,10 @@ useEffect(() => {
   const handleCreateReview = async (e) => {
     e.preventDefault();
 
+    if (isCreating) return;
+
+    setIsCreating(true);
+
     try {
       const projectRes = await api.post("/api/projects", {
         name,
@@ -112,6 +119,28 @@ useEffect(() => {
     } catch (err) {
       console.error("CREATE REVIEW ERROR:", err);
       console.error("CREATE REVIEW ERROR RESPONSE:", err.response?.data);
+    }finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleDeleteReview = async () => {
+    if (!reviewToDelete || isDeleting) return;
+
+    setIsDeleting(true);
+
+    try {
+      await api.delete(`/api/review_sessions/${reviewToDelete.id}`);
+
+      setReviews((prevReviews) =>
+        prevReviews.filter((review) => review.id !== reviewToDelete.id)
+      );
+
+      setReviewToDelete(null);
+    } catch (err) {
+      console.error("DELETE REVIEW ERROR:", err);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -129,6 +158,7 @@ useEffect(() => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          disabled={isCreating}
           style={{ display: "block", marginBottom: "10px" }}
         />
 
@@ -137,10 +167,13 @@ useEffect(() => {
           value={baseUrl}
           onChange={(e) => setBaseUrl(e.target.value)}
           required
+          disabled={isCreating}
           style={{ display: "block", marginBottom: "10px" }}
         />
 
-        <button type="submit">Create</button>
+        <button type="submit" disabled={isCreating}>
+          {isCreating ? "Creating..." : "Create"}
+        </button>
       </form>
 
       {reviews.length === 0 ? (
@@ -161,43 +194,65 @@ useEffect(() => {
               <div style={{ marginTop: "8px", display: "flex", gap: "12px", alignItems: "center" }}>
                 <a href={`/reviews/${review.id}`}>Open Review</a>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    const shareUrl = `${window.location.origin}/review/${review.share_token}`;
-                    navigator.clipboard.writeText(shareUrl);
-                  }}
-                >
-                  Copy Share Link
-                </button>
-
-                <button
-                  type="button"
-                  onClick={async () => {
-                    const confirmed = window.confirm(
-                      "Delete this review session permanently?"
-                    );
-
-                    if (!confirmed) return;
-
-                    try {
-                      await api.delete(`/api/review_sessions/${review.id}`);
-
-                      setReviews((prevReviews) =>
-                        prevReviews.filter((r) => r.id !== review.id)
-                      );
-                    } catch (err) {
-                      console.error("DELETE REVIEW ERROR:", err);
-                    }
-                  }}
-                >
-                  Delete
-                </button>
+<button
+  type="button"
+  onClick={() => setReviewToDelete(review)}
+>
+  Delete
+</button>
               </div>
             </li>
           ))}
         </ul>
       )}
+      {reviewToDelete && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.45)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+    }}
+  >
+    <div
+      style={{
+        background: "white",
+        padding: "24px",
+        borderRadius: "16px",
+        width: "360px",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+      }}
+    >
+      <h2 style={{ marginTop: 0 }}>Delete review session?</h2>
+
+      <p>
+        This will permanently delete{" "}
+        <strong>{reviewToDelete.name}</strong> and all its comments.
+      </p>
+
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
+        <button
+          type="button"
+          onClick={() => setReviewToDelete(null)}
+          disabled={isDeleting}
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={handleDeleteReview}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting..." : "Delete"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
