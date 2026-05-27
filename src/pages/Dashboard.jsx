@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../lib/api";
+import "./Dashboard.css";
 
 export default function Dashboard() {
   const [reviews, setReviews] = useState([]);
@@ -146,113 +147,149 @@ useEffect(() => {
 
   if (error) return <div style={{ padding: "40px" }}>{error}</div>;
 
-  return (
-    <div style={{ padding: "40px" }}>
-      <h1>Dashboard</h1>
+return (
+  <div className="dashboard-page">
+    <div className="dashboard-shell">
+      <div className="dashboard-topbar">
+        <div>
+          <p className="dashboard-eyebrow">
+            REVIEW WORKSPACE
+          </p>
 
-      <form onSubmit={handleCreateReview} style={{ marginBottom: "30px" }}>
-        <h2>Create Review</h2>
+          <h1 className="dashboard-title">
+            Dashboard
+          </h1>
 
-        <input
-          placeholder="Review name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          disabled={isCreating}
-          style={{ display: "block", marginBottom: "10px" }}
-        />
+          <p className="dashboard-subtitle">
+            Create review sessions, track unresolved
+            feedback, and collaborate directly on live websites.
+          </p>
+        </div>
+      </div>
 
-        <input
-          placeholder="Base URL"
-          value={baseUrl}
-          onChange={(e) => setBaseUrl(e.target.value)}
-          required
-          disabled={isCreating}
-          style={{ display: "block", marginBottom: "10px" }}
-        />
+      <div className="dashboard-create-card">
+        <div className="dashboard-create-header">
+          <h2>Create review</h2>
 
-        <button type="submit" disabled={isCreating}>
-          {isCreating ? "Creating..." : "Create"}
-        </button>
-      </form>
+          <p>
+            Start a new review session for a website.
+          </p>
+        </div>
+
+        <form
+          onSubmit={handleCreateReview}
+          className="dashboard-form"
+        >
+          <input
+            className="dashboard-input"
+            placeholder="Review name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            disabled={isCreating}
+          />
+
+          <input
+            className="dashboard-input"
+            placeholder="Base URL"
+            value={baseUrl}
+            onChange={(e) => setBaseUrl(e.target.value)}
+            required
+            disabled={isCreating}
+          />
+
+          <button
+            className="dashboard-button dashboard-button--primary"
+            type="submit"
+            disabled={isCreating}
+          >
+            {isCreating ? "Creating..." : "Create review"}
+          </button>
+        </form>
+      </div>
 
       {reviews.length === 0 ? (
-        <p>No review sessions yet.</p>
+        <div className="dashboard-empty">
+          No review sessions yet.
+        </div>
       ) : (
-        <ul>
+        <div className="dashboard-grid">
           {reviews.map((review) => (
-            <li key={review.id} style={{ marginBottom: "20px" }}>
-              <div>
-                <strong>{review.name}</strong>
-              </div>
-              <div>{review.base_url}</div>
-              {review.unresolved_comments_count > 0 && (
-                <div style={{ marginTop: "6px", fontSize: "14px", fontWeight: "600" }}>
-                  {review.unresolved_comments_count} unresolved
+            <div
+              key={review.id}
+              className="dashboard-card"
+            >
+              <div className="dashboard-card__content">
+                <div className="dashboard-card__top">
+                  <div>
+                    <h3>{review.name}</h3>
+
+                    <p>{review.base_url}</p>
+                  </div>
+
+                  {review.unresolved_comments_count > 0 && (
+                    <div className="dashboard-badge">
+                      {review.unresolved_comments_count} unresolved
+                    </div>
+                  )}
                 </div>
-              )}
-              <div style={{ marginTop: "8px", display: "flex", gap: "12px", alignItems: "center" }}>
-                <a href={`/reviews/${review.id}`}>Open Review</a>
 
-<button
-  type="button"
-  onClick={() => setReviewToDelete(review)}
->
-  Delete
-</button>
+                <div className="dashboard-card__actions">
+                  <a
+                    href={`/reviews/${review.id}`}
+                    className="dashboard-button dashboard-button--primary"
+                  >
+                    Open review
+                  </a>
+
+                  <button
+                    type="button"
+                    className="dashboard-button dashboard-button--ghost"
+                    onClick={() => setReviewToDelete(review)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
+
       {reviewToDelete && (
-  <div
-    style={{
-      position: "fixed",
-      inset: 0,
-      background: "rgba(0,0,0,0.45)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 1000,
-    }}
-  >
-    <div
-      style={{
-        background: "white",
-        padding: "24px",
-        borderRadius: "16px",
-        width: "360px",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-      }}
-    >
-      <h2 style={{ marginTop: 0 }}>Delete review session?</h2>
+        <div className="dashboard-modal-backdrop">
+          <div className="dashboard-modal">
+            <h2>Delete review session?</h2>
 
-      <p>
-        This will permanently delete{" "}
-        <strong>{reviewToDelete.name}</strong> and all its comments.
-      </p>
+            <p>
+              This will permanently delete{" "}
+              <strong>{reviewToDelete.name}</strong>
+              {" "}and all its comments.
+            </p>
 
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
-        <button
-          type="button"
-          onClick={() => setReviewToDelete(null)}
-          disabled={isDeleting}
-        >
-          Cancel
-        </button>
+            <div className="dashboard-modal__actions">
+              <button
+                type="button"
+                className="dashboard-button dashboard-button--ghost"
+                onClick={() => setReviewToDelete(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
 
-        <button
-          type="button"
-          onClick={handleDeleteReview}
-          disabled={isDeleting}
-        >
-          {isDeleting ? "Deleting..." : "Delete"}
-        </button>
-      </div>
+              <button
+                type="button"
+                className="dashboard-button dashboard-button--danger"
+                onClick={handleDeleteReview}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   </div>
-)}
-    </div>
-  );
+);
 }
