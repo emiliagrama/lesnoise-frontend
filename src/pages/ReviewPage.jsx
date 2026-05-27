@@ -8,6 +8,8 @@ export default function ReviewPage() {
 
   const [review, setReview] = useState(null);
   const [error, setError] = useState("");
+  const [copiedClientLink, setCopiedClientLink] = useState(false);
+  const [copiedSnippet, setCopiedSnippet] = useState(false);
 
   useEffect(() => {
     const loadReview = async () => {
@@ -29,26 +31,42 @@ export default function ReviewPage() {
     loadReview();
   }, [id, shareToken, isDeveloperView]);
 
-  const copyClientLink = () => {
-    const shareUrl = `${window.location.origin}/review/${review.share_token}`;
+  const copyClientLink = async () => {
+    try {
+      const shareUrl = `${window.location.origin}/review/${review.share_token}`;
 
-    navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(shareUrl);
 
-    alert("Client review link copied");
+      setCopiedClientLink(true);
+
+      setTimeout(() => {
+        setCopiedClientLink(false);
+      }, 2000);
+    } catch (err) {
+      console.error("COPY CLIENT LINK ERROR:", err);
+    }
   };
 
-  const copyInstallSnippet = () => {
-    const snippet = `<script src="${window.location.origin}/lesnoise-widget.js"></script>
+  const copyInstallSnippet = async () => {
+    try {
+      const snippet = `<script src="${window.location.origin}/lesnoise-widget.js"></script>
 
-<script>
-  Lesnoise.init({
-    reviewToken: "${review.share_token}"
-  });
-</script>`;
+  <script>
+    Lesnoise.init({
+      reviewToken: "${review.share_token}"
+    });
+  </script>`;
 
-    navigator.clipboard.writeText(snippet);
+      await navigator.clipboard.writeText(snippet);
 
-    alert("Install snippet copied");
+      setCopiedSnippet(true);
+
+      setTimeout(() => {
+        setCopiedSnippet(false);
+      }, 2000);
+    } catch (err) {
+      console.error("COPY SNIPPET ERROR:", err);
+    }
   };
 
   const setWidgetMode = (mode) => {
@@ -172,7 +190,7 @@ export default function ReviewPage() {
               type="button"
               onClick={copyInstallSnippet}
             >
-              Copy install snippet
+              {copiedSnippet ? "Copied!" : "Copy install snippet"}
             </button>
 
             <p
@@ -194,7 +212,7 @@ export default function ReviewPage() {
               type="button"
               onClick={copyClientLink}
             >
-              Copy client review link
+              {copiedClientLink ? "Copied!" : "Copy client review link"}
             </button>
           </div>
         )}
