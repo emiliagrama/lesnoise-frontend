@@ -88,6 +88,11 @@ export default function Dashboard() {
                 <strong>{review.name}</strong>
               </div>
               <div>{review.base_url}</div>
+              {review.unresolved_comments_count > 0 && (
+                <div style={{ marginTop: "6px", fontSize: "14px", fontWeight: "600" }}>
+                  {review.unresolved_comments_count} unresolved
+                </div>
+              )}
               <div style={{ marginTop: "8px", display: "flex", gap: "12px", alignItems: "center" }}>
                 <a href={`/reviews/${review.id}`}>Open Review</a>
 
