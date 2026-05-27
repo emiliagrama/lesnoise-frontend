@@ -170,6 +170,29 @@ useEffect(() => {
                 >
                   Copy Share Link
                 </button>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const confirmed = window.confirm(
+                      "Delete this review session permanently?"
+                    );
+
+                    if (!confirmed) return;
+
+                    try {
+                      await api.delete(`/api/review_sessions/${review.id}`);
+
+                      setReviews((prevReviews) =>
+                        prevReviews.filter((r) => r.id !== review.id)
+                      );
+                    } catch (err) {
+                      console.error("DELETE REVIEW ERROR:", err);
+                    }
+                  }}
+                >
+                  Delete
+                </button>
               </div>
             </li>
           ))}
