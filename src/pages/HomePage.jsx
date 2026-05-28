@@ -26,7 +26,7 @@ export default function HomePage() {
 
     {/* LEFT SIDE */}
     <div className="lesnoise-hero__left">
-      <p className="lesnoise-hero__eyebrow">Website feedback, refined</p>
+      <p className="lesnoise-hero__eyebrow">Designed for clear decisions</p>
 
       <h1 className="lesnoise-hero__title">
         Feedback,
@@ -37,17 +37,13 @@ export default function HomePage() {
       </h1>
 
       <p className="lesnoise-hero__subtitle">
-        Collect precise feedback directly on your pages — in context,
-        in place, without friction.
+            Create a review. Share the link. Watch comments appear directly on
+            the page.
       </p>
 
       <div className="lesnoise-hero__actions">
         <Link to="/login" className="lesnoise-button lesnoise-button--primary">
-          Start a review
-        </Link>
-
-        <Link to="/login" className="lesnoise-button lesnoise-button--ghost">
-          Login
+          Start reviewing
         </Link>
       </div>
     </div>
@@ -67,8 +63,10 @@ export default function HomePage() {
           </div>
 
           <div className="lesnoise-product__content">
-            <h3>A cleaner way to review</h3>
-            <p>Clients comment directly on your page.</p>
+          <div className="lesnoise-mini-section">
+          
+            <h3>Systems for modern products</h3>
+          </div>
           </div>
 
           {/* Pins */}
@@ -78,8 +76,14 @@ export default function HomePage() {
 
           {/* Comment */}
           <div className="comment">
-            <strong>Client</strong>
-            <p>Move this section slightly higher.</p>
+            <div className="lesnoise-comment-card__top">
+              <span className="lesnoise-comment-card__developer">client</span>
+              <span>Unresolved</span>
+            </div>
+
+            <p>
+              Move this CTA slightly higher so it connects faster with the headline.
+            </p>
           </div>
         </div>
       </div>
@@ -106,26 +110,14 @@ export default function HomePage() {
 
               <div className="lesnoise-stage__page">
                 <div className="lesnoise-stage__badge">Live page</div>
-
-                <h2 className="lesnoise-stage__headline">
-                  A cleaner way to review
-                  <br />
-                  websites in context.
-                </h2>
-
-                <p className="lesnoise-stage__copy">
-                  Share one review link, let clients click directly on the page,
-                  and keep every comment anchored to the right place.
-                </p>
-
-                <div className="lesnoise-stage__line"></div>
-                <div className="lesnoise-stage__line lesnoise-stage__line--short"></div>
-
-                <div className="lesnoise-stage__mini-card">
-                  <span className="lesnoise-stage__mini-label">Section note</span>
-                  <p>Increase spacing above this block.</p>
+                <div className="lesnoise-shell lesnoise-value__inner">
+               
+                  <p>No screenshots.</p>
+                  <p>No endless emails.</p>
+                  <p>No confusion.</p>
                 </div>
-              </div>
+                </div>
+
 
               <button className="lesnoise-pin lesnoise-pin--one" type="button">
                 1
@@ -139,13 +131,12 @@ export default function HomePage() {
 
               <div className="lesnoise-comment-card">
                 <div className="lesnoise-comment-card__top">
-                  <span className="lesnoise-comment-card__author">Client</span>
-                  <span className="lesnoise-comment-card__tag">Comment</span>
+                  <span className="lesnoise-comment-card__developer">developer</span>
+                  <span >Solved</span>
                 </div>
 
                 <p className="lesnoise-comment-card__body">
-                  This headline feels strong. Move the CTA slightly higher so it
-                  sits closer to the message.
+                  Updated spacing and aligned the CTA with the hero copy.
                 </p>
               </div>
             </div>
@@ -154,40 +145,26 @@ export default function HomePage() {
       </section>
 
       <section className="lesnoise-value">
-        <div className="lesnoise-shell lesnoise-value__inner">
-          <p>No screenshots.</p>
-          <p>No endless emails.</p>
-          <p>No confusion.</p>
 
           <span className="lesnoise-value__subline">
-            Just clear feedback, placed exactly where it belongs.
+            No noise, no chaos.
           </span>
-        </div>
-      </section>
-
-      <section className="lesnoise-flow">
-        <div className="lesnoise-shell">
-          <p className="lesnoise-flow__text">
-            Create a review. Share the link. Watch feedback appear directly on
-            the page.
-          </p>
-        </div>
+       
       </section>
 
       <section className="lesnoise-cta">
         <div className="lesnoise-shell">
           <div className="lesnoise-cta__panel">
-            <p className="lesnoise-cta__eyebrow">Ready to start</p>
+            <p className="lesnoise-cta__eyebrow">real connection</p>
 
             <h2 className="lesnoise-cta__title">Start your first review.</h2>
 
             <p className="lesnoise-cta__subtitle">
-              A cleaner way to collect feedback — for designers, developers, and
-              clients.
+              Built for smoother collaboration between clients and developers.
             </p>
 
-            <Link to="/login" className="lesnoise-button lesnoise-button--primary">
-              Start a review
+            <Link to="/login" className="lesnoise-button lesnoise-button--ghost">
+              Start reviewing
             </Link>
           </div>
         </div>
