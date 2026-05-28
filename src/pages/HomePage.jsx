@@ -43,7 +43,7 @@ export default function HomePage() {
 
       <div className="lesnoise-hero__actions">
         <Link to="/login" className="lesnoise-button lesnoise-button--primary">
-          Start reviewing
+          Start a review
         </Link>
       </div>
     </div>
@@ -59,7 +59,8 @@ export default function HomePage() {
             <div className="dots">
               <span></span><span></span><span></span>
             </div>
-            <div className="url">https://project-preview.com</div>
+            <div className="url">https://project-preview.com
+            </div>
           </div>
 
           <div className="lesnoise-product__content">
@@ -67,6 +68,7 @@ export default function HomePage() {
           
             <h3>Systems for modern products</h3>
           </div>
+          <button className="lesnoise-button lesnoise-button--ghost">book now</button>
           </div>
 
           {/* Pins */}
@@ -77,8 +79,8 @@ export default function HomePage() {
           {/* Comment */}
           <div className="comment">
             <div className="lesnoise-comment-card__top">
-              <span className="lesnoise-comment-card__developer">client</span>
-              <span>Unresolved</span>
+              <span className="lesnoise-comment-card__developer">Client</span>
+              <span>unresolved</span>
             </div>
 
             <p>
@@ -131,8 +133,8 @@ export default function HomePage() {
 
               <div className="lesnoise-comment-card">
                 <div className="lesnoise-comment-card__top">
-                  <span className="lesnoise-comment-card__developer">developer</span>
-                  <span >Solved</span>
+                  <span className="lesnoise-comment-card__developer">Developer</span>
+                  <span >solved</span>
                 </div>
 
                 <p className="lesnoise-comment-card__body">
@@ -164,7 +166,7 @@ export default function HomePage() {
             </p>
 
             <Link to="/login" className="lesnoise-button lesnoise-button--ghost">
-              Start reviewing
+              Start a review
             </Link>
           </div>
         </div>

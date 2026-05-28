@@ -29,13 +29,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(14px);
   background: rgba(248, 250, 252, 0.76);
   border-bottom: 1px solid rgba(15, 23, 42, 0.05);
 }
 
 .lesnoise-header__inner {
-  min-height: 78px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -44,9 +44,9 @@ body {
 .lesnoise-logo {
   text-decoration: none;
   color: #0f172a;
-  font-size: 1.08rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-size: 1.10rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .lesnoise-header__nav {
@@ -112,18 +112,6 @@ body {
 
 .lesnoise-button--primary:hover {
   background: #111827;
-}
-
-.lesnoise-button--ghost {
-  color: #0f172a;
-  border: 1px solid rgba(78, 85, 102, 0.089);
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 9px 28px rgba(122, 123, 126, 0.315);
-}
-
-.lesnoise-button--ghost:hover {
-  border-color: rgba(15, 23, 42, 0.281);
-  background: rgba(255, 255, 255, 0.92);
 }
 
 /* =========================
@@ -287,19 +275,19 @@ body {
 
 .pin-1 {
   top: 55%;
-  right: 5%;
+  right: 77%;
 }
 
 .pin-2 {
   top: 82%;
-  right: 34%;
+  right: 40%;
   animation-delay: 0.5s;
   background-color: #0711277a;
 }
 
 .pin-3 {
-  bottom: 62%;
-  right: 72%;
+  bottom: 86%;
+  right: 25%;
   animation-delay: 1s;
 }
 
@@ -582,6 +570,23 @@ body {
   font-size: 1.04rem;
 }
 
+.lesnoise-button--ghost {
+  color: #0f172a;
+  border: 1px solid rgba(78, 85, 102, 0.089);
+  box-shadow: 0 9px 28px rgba(122, 123, 126, 0.315);
+  background:
+  radial-gradient(
+    circle at top left,
+    rgba(207, 225, 255, 0.329),
+    transparent 69%
+  ),
+  #f5f7fa;
+}
+
+.lesnoise-button--ghost:hover {
+  border-color: rgba(15, 23, 42, 0.164);
+  background: rgba(255, 255, 255, 0.92);
+}
 /* =========================
    Responsive
 ========================= */
