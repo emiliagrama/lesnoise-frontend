@@ -68,7 +68,9 @@ export default function HomePage() {
           
             <h3>Systems for modern products</h3>
           </div>
-          <button className="lesnoise-button lesnoise-button--ghost">book now</button>
+            <button className="lesnoise-button lesnoise-button--ghost lesnoise-product__button">
+              book now
+            </button>
           </div>
 
           {/* Pins */}
@@ -87,6 +89,7 @@ export default function HomePage() {
               Move this CTA slightly higher so it connects faster with the headline.
             </p>
           </div>
+          
         </div>
       </div>
     </div>
