@@ -152,23 +152,21 @@
   word-break: break-word;
 }
 
-.dashboard-badge {
-  flex-shrink: 0;
-  height: fit-content;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.08);
-  color: #2563eb;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.dashboard-card,
+.dashboard-card * {
+  box-sizing: border-box;
 }
 
 .dashboard-card__actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+.dashboard-card__actions .dashboard-button {
+  flex: 1;
+  min-width: 140px;
 }
 
 .dashboard-button {
@@ -206,13 +204,21 @@
 }
 
 .dashboard-button--ghost {
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(15, 23, 42, 0.08);
   color: #0f172a;
+  border: 1px solid rgba(78, 85, 102, 0.089);
+  box-shadow: 0 9px 28px rgba(122, 123, 126, 0.315);
+  background:
+  radial-gradient(
+    circle at top left,
+    rgba(207, 225, 255, 0.329),
+    transparent 69%
+  ),
+  #f5f7fa;
 }
 
 .dashboard-button--ghost:hover {
-  border-color: rgba(15, 23, 42, 0.16);
+  border-color: rgba(15, 23, 42, 0.164);
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .dashboard-button--danger {
@@ -282,6 +288,41 @@
   margin-top: 28px;
 }
 
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.dashboard-stat-card {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(74, 191, 235, 0.28);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 18px 45px rgba(14, 36, 56, 0.08);
+}
+
+.dashboard-stat-card span {
+  display: block;
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: #071126;
+}
+
+.dashboard-stat-card p {
+  margin: 8px 0 0;
+  color: #61718a;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
   .dashboard-shell {
     width: min(100% - 28px, 1180px);
@@ -309,10 +350,20 @@
 
   .dashboard-form {
     flex-direction: column;
+    width: 100%;
   }
 
   .dashboard-input {
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dashboard-form .dashboard-button {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .dashboard-modal {

@@ -147,6 +147,9 @@ useEffect(() => {
 
   if (error) return <div style={{ padding: "40px" }}>{error}</div>;
 
+  const totalReviews = reviews.length;
+
+
 return (
   <div className="dashboard-page">
     <div className="dashboard-shell">
@@ -164,6 +167,31 @@ return (
             Create review sessions, track unresolved
             feedback, and collaborate directly on live websites.
           </p>
+        </div>
+      </div>
+      
+      <div className="dashboard-stats">
+        <div className="dashboard-stat-card">
+          <span>{totalReviews}</span>
+          <p>Review sessions</p>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <span>
+            {reviews.filter(
+              review => (review.unresolved_comments_count || 0) > 0
+            ).length}
+          </span>
+          <p>Need attention</p>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <span>
+            {reviews.filter(
+              review => (review.unresolved_comments_count || 0) === 0
+            ).length}
+          </span>
+          <p>Resolved reviews</p>
         </div>
       </div>
 
@@ -227,11 +255,12 @@ return (
                     <p>{review.base_url}</p>
                   </div>
 
-                  {review.unresolved_comments_count > 0 && (
-                    <div className="dashboard-badge">
-                      {review.unresolved_comments_count} unresolved
-                    </div>
-                  )}
+                
+                  <div className="dashboard-card__meta">          
+                    <span>
+                      {review.unresolved_comments_count || 0} unresolved comments
+                    </span>
+                  </div>
                 </div>
 
                 <div className="dashboard-card__actions">
@@ -245,6 +274,7 @@ return (
                   <button
                     type="button"
                     className="dashboard-button dashboard-button--ghost"
+                    
                     onClick={() => setReviewToDelete(review)}
                   >
                     Delete
