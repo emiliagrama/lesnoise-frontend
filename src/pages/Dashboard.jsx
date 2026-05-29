@@ -256,8 +256,14 @@ return (
                   </div>
 
                 
-                  <div className="dashboard-card__meta">          
-                    <span>
+                  <div className="dashboard-card__meta">
+                    <span
+                      className={
+                        review.unresolved_comments_count > 0
+                          ? "dashboard-unresolved-warning"
+                          : ""
+                      }
+                    >
                       {review.unresolved_comments_count || 0} unresolved comments
                     </span>
                   </div>

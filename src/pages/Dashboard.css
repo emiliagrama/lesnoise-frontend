@@ -44,7 +44,7 @@
 
 .dashboard-create-card {
   margin-bottom: 38px;
-  padding: 28px;
+  padding: 22px;
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.84);
   border: 1px solid rgba(15, 23, 42, 0.06);
@@ -117,6 +117,7 @@
     transform 0.24s ease,
     box-shadow 0.24s ease,
     border-color 0.24s ease;
+    padding: 5px;
 }
 
 .dashboard-card:hover {
@@ -140,7 +141,7 @@
 
 .dashboard-card h3 {
   margin: 0 0 10px;
-  font-size: 1.28rem;
+  font-size: 1.70rem;
   letter-spacing: -0.04em;
   color: #0f172a;
 }
@@ -150,6 +151,13 @@
   color: #64748b;
   line-height: 1.6;
   word-break: break-word;
+    font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.dashboard-unresolved-warning {
+  color: #c96b0096;
+  font-weight: 700;
 }
 
 .dashboard-card,
