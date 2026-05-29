@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../lib/api";
+import "./Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,55 +15,65 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await api.post("/api/login", {
-        email,
-        password,
-      });
+      const res = await api.post("/api/login", { email, password });
 
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err) {
       console.error("LOGIN ERROR:", err);
       console.error("LOGIN ERROR RESPONSE:", err.response?.data);
-      setError("Login failed");
+      setError("Invalid email or password.");
     }
   };
 
   return (
-    <div style={{ padding: "40px", maxWidth: "400px", margin: "0 auto" }}>
-      <h1>Login</h1>
+    <main className="login-page">
+      <nav className="login-nav">
+        <Link to="/" className="login-logo">lesnoise</Link>
+        <Link to="/signup" className="login-nav-btn">Sign up</Link>
+      </nav>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "16px" }}>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ display: "block", width: "100%", padding: "8px", marginTop: "6px" }}
-          />
+      <section className="login-shell">
+        <div className="login-copy">
+          <p className="login-eyebrow">Welcome back</p>
+          <h1>Login to your review workspace.</h1>
+          <p>
+            Continue managing feedback, comments, and client review sessions.
+          </p>
         </div>
 
-        <div style={{ marginBottom: "16px" }}>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ display: "block", width: "100%", padding: "8px", marginTop: "6px" }}
-          />
+        <div className="login-card">
+          <h2>Login</h2>
+
+          <form onSubmit={handleSubmit}>
+            <label>
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@email.com"
+              />
+            </label>
+
+            <label>
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
+            </label>
+
+            <button type="submit">Login</button>
+
+            {error && <p className="login-error">{error}</p>}
+          </form>
         </div>
-
-        <button type="submit">Login</button>
-      </form>
-
-      {error && (
-        <p style={{ color: "red", marginTop: "16px" }}>
-          {error}
-        </p>
-      )}
-    </div>
+      </section>
+    </main>
   );
 }
