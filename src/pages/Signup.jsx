@@ -26,7 +26,14 @@ export default function Signup() {
       navigate("/dashboard");
     } catch (err) {
       console.error("SIGNUP ERROR:", err);
-      setError(err.response?.data?.error || "Signup failed.");
+      console.error("SIGNUP ERROR RESPONSE:", err.response?.data);
+
+      const backendError =
+        err.response?.data?.errors?.join(", ") ||
+        err.response?.data?.error ||
+        "Signup failed.";
+
+      setError(backendError);
     }
   };
 
