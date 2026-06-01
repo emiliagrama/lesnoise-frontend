@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../lib/api";
+import "./ReviewPage.css";
 
 export default function ReviewPage() {
   const { id, shareToken } = useParams();
@@ -10,6 +11,7 @@ export default function ReviewPage() {
   const [error, setError] = useState("");
   const [copiedClientLink, setCopiedClientLink] = useState(false);
   const [copiedSnippet, setCopiedSnippet] = useState(false);
+  const [showInstall, setShowInstall] = useState(true);
 
   useEffect(() => {
     const loadReview = async () => {
@@ -21,10 +23,7 @@ export default function ReviewPage() {
         setReview(reviewRes.data);
       } catch (err) {
         console.error("LOAD REVIEW ERROR:", err);
-
-        setError(
-          `Failed to load review (${err.response?.status || "no status"})`
-        );
+        setError(`Failed to load review (${err.response?.status || "no status"})`);
       }
     };
 
@@ -34,14 +33,10 @@ export default function ReviewPage() {
   const copyClientLink = async () => {
     try {
       const shareUrl = `${window.location.origin}/review/${review.share_token}`;
-
       await navigator.clipboard.writeText(shareUrl);
 
       setCopiedClientLink(true);
-
-      setTimeout(() => {
-        setCopiedClientLink(false);
-      }, 2000);
+      setTimeout(() => setCopiedClientLink(false), 2000);
     } catch (err) {
       console.error("COPY CLIENT LINK ERROR:", err);
     }
@@ -51,206 +46,148 @@ export default function ReviewPage() {
     try {
       const snippet = `<script src="${window.location.origin}/lesnoise-widget.js"></script>
 
-  <script>
-    Lesnoise.init({
-      reviewToken: "${review.share_token}"
-    });
-  </script>`;
+<script>
+  Lesnoise.init({
+    reviewToken: "${review.share_token}"
+  });
+</script>`;
 
       await navigator.clipboard.writeText(snippet);
 
       setCopiedSnippet(true);
-
-      setTimeout(() => {
-        setCopiedSnippet(false);
-      }, 2000);
+      setTimeout(() => setCopiedSnippet(false), 2000);
     } catch (err) {
       console.error("COPY SNIPPET ERROR:", err);
     }
   };
 
-  const setWidgetMode = (mode) => {
-    const iframe = document.getElementById(
-      "lesnoise-review-iframe"
-    );
+  if (error) {
+    return <div className="review-state">{error}</div>;
+  }
 
-    if (!iframe || !iframe.contentWindow) return;
+  if (!review) {
+    return <div className="review-state">Loading review...</div>;
+  }
 
-    iframe.contentWindow.postMessage(
-      {
-        type: "LESNOISE_MODE",
-        mode,
-      },
-      "*"
-    );
-  };
-
-  if (error) return <div>{error}</div>;
-
-  if (!review) return <div>Loading...</div>;
+  const clientReviewLink = `${window.location.origin}/review/${review.share_token}`;
 
   const reviewUrl = `${review.base_url}?lesnoise_review=${review.share_token}&lesnoise_role=${
     isDeveloperView ? "developer" : "client"
   }`;
-  
+
   return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        background: "#f3f4f6",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          padding: "32px",
-          textAlign: "center",
-          borderBottom: "1px solid #e5e7eb",
-          background: "#ffffff",
-        }}
-      >
-        <div
-          style={{
-            display: "inline-block",
-            padding: "6px 12px",
-            borderRadius: "999px",
-            background: isDeveloperView
-              ? "#111827"
-              : "#2563eb",
-            color: "white",
-            fontSize: "12px",
-            fontWeight: "700",
-            marginBottom: "12px",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
-        >
-          {isDeveloperView
-            ? "Developer view"
-            : "Client view"}
-        </div>
-
-        <h1>{review.name}</h1>
-
-        <p style={{ color: "#6b7280" }}>
-          {review.base_url}
-        </p>
-
-        {isDeveloperView && (
-          <div
-            style={{
-              marginTop: "24px",
-              maxWidth: "760px",
-              marginLeft: "auto",
-              marginRight: "auto",
-              textAlign: "left",
-              background: "#f9fafb",
-              border: "1px solid #e5e7eb",
-              borderRadius: "16px",
-              padding: "24px",
-            }}
-          >
-            <h2 style={{ marginTop: 0 }}>
-              Install Lesnoise on this website
-            </h2>
-
-            <p
-              style={{
-                color: "#6b7280",
-                lineHeight: "1.6",
-              }}
-            >
-              For comments to stay glued to the
-              real page while scrolling, the
-              widget must be installed inside the
-              reviewed website.
-            </p>
-
-            <pre
-              style={{
-                background: "#111827",
-                color: "#e5e7eb",
-                padding: "16px",
-                borderRadius: "12px",
-                overflowX: "auto",
-                fontSize: "13px",
-                lineHeight: "1.5",
-              }}
-            >
-{`<script src="${window.location.origin}/lesnoise-widget.js"></script>
-
-<script>
-  Lesnoise.init({
-    reviewToken: "${review.share_token}"
-  });
-</script>`}
-            </pre>
-
-            <button
-              type="button"
-              onClick={copyInstallSnippet}
-            >
-              {copiedSnippet ? "Copied!" : "Copy install snippet"}
-            </button>
-
-            <p
-              style={{
-                color: "#6b7280",
-                marginTop: "16px",
-                fontSize: "14px",
-              }}
-            >
-              Client link:
-              <br />
-              <code>
-                {window.location.origin}/review/
-                {review.share_token}
-              </code>
-            </p>
-
-            <button
-              type="button"
-              onClick={copyClientLink}
-            >
-              {copiedClientLink ? "Copied!" : "Copy client review link"}
-            </button>
+    <main className="review-page">
+      <header className="review-header">
+        <div className="review-shell review-header__inner">
+          <div className="review-view-badge">
+            {isDeveloperView ? "Developer view" : "Client view"}
           </div>
-        )}
-      </div>
 
-      
+          <h1>{review.name}</h1>
 
-      <div
-        style={{
-          padding: "40px",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            width: "90vw",
-            maxWidth: "1200px",
-            height: "80vh",
-            borderRadius: "12px",
-            overflow: "hidden",
-            background: "#fff",
-            boxShadow:
-              "0 10px 40px rgba(0,0,0,0.1)",
-          }}
-        >
-          <iframe
-            id="lesnoise-review-iframe"
-            src={reviewUrl}
-            title="Reviewed website"
-            style={{
-              width: "100%",
-              height: "100%",
-              border: "none",
-            }}
-          />
+          <p className="review-url">{review.base_url}</p>
+
+          {isDeveloperView && (
+            <section className="review-install-card">
+              <button
+                type="button"
+                className="review-install-toggle"
+                onClick={() => setShowInstall((prev) => !prev)}
+              >
+                <h2>Install Lesnoise on this website</h2>
+                <span>{showInstall ? "Hide" : "Show"}</span>
+              </button>
+
+              {showInstall && (
+                <div className="review-install-content">
+                  <div className="review-install-card__content">
+                    <div>
+                      <p>
+                        Paste the snippet below into the website you want to review.
+                      </p>
+
+                      <ul className="review-install-list">
+                        <li>
+                          Static HTML websites → before <code>{"</body>"}</code>
+                        </li>
+
+                        <li>
+                          React / Vite projects → <code>public/index.html</code> before{" "}
+                          <code>{"</body>"}</code>
+                        </li>
+
+                        <li>
+                          Rails applications → <code>app/views/layouts/application.html.erb</code>{" "}
+                          before <code>{"</body>"}</code>
+                        </li>
+
+                        <li>
+                          Next.js applications → <code>layout.tsx</code> or{" "}
+                          <code>_document.js</code> before <code>{"</body>"}</code>
+                        </li>
+                      </ul>
+
+                      <p>
+                        Once installed, comments stay attached to the real page while scrolling.
+                      </p>
+                    </div>
+                  </div>
+
+                  <pre className="review-code-block">
+  {`<script src="${window.location.origin}/lesnoise-widget.js"></script>
+  <script>
+    Lesnoise.init({
+      reviewToken: "${review.share_token}"
+    });
+  </script>`}
+                  </pre>
+
+                  <button
+                    type="button"
+                    className="review-button review-button--primary review-copy-button"
+                    onClick={copyInstallSnippet}
+                  >
+                    {copiedSnippet ? "Snippet copied" : "Copy install snippet"}
+                  </button>
+
+                  <div className="review-client-link">
+                    <span>Client review link</span>
+
+                    <code>{clientReviewLink}</code>
+
+                    <button
+                      type="button"
+                      className="review-button review-button--ghost review-copy-button"
+                      onClick={copyClientLink}
+                    >
+                      {copiedClientLink ? "Client link copied" : "Copy client link"}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
         </div>
-      </div>
-    </div>
+      </header>
+
+      <section className="review-preview-section">
+        <div className="review-shell">
+          <div className="review-preview-topbar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <p>{review.base_url}</p>
+          </div>
+
+          <div className="review-preview-frame">
+            <iframe
+              id="lesnoise-review-iframe"
+              src={reviewUrl}
+              title="Reviewed website"
+            />
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

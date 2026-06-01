@@ -288,6 +288,7 @@ function showCommentCard(comment, pin) {
   card.style.zIndex = "999999";
   card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
   card.style.fontFamily = "Arial, sans-serif";
+  
 
   const editButton = card.querySelector("[data-edit]");
 
