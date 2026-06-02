@@ -256,7 +256,7 @@ function showCommentCard(comment, pin) {
       ${comment.body}
     </div>
 
-    <div style="display:flex; gap:8px; justify-content:flex-end;">
+    <div data-comment-actions style="display:flex; gap:8px; justify-content:flex-end;">
       ${
         currentRole === "developer" || comment.resolved
           ? `<button data-resolve>
@@ -277,16 +277,33 @@ function showCommentCard(comment, pin) {
   `;
 
   card.style.position = "absolute";
-  card.style.left = `${window.scrollX + rect.left + 36}px`;
-  card.style.top = `${window.scrollY + rect.top - 8}px`;
-  card.style.width = "240px";
+  const cardWidth = 280;
+
+  let left = window.scrollX + rect.left + 36;
+  let top = window.scrollY + rect.top - 8;
+
+  const viewportRight =
+    window.scrollX + window.innerWidth;
+
+  if (left + cardWidth > viewportRight - 16) {
+    left = viewportRight - cardWidth - 16;
+  }
+
+  if (left < window.scrollX + 16) {
+    left = window.scrollX + 16;
+  }
+
+  card.style.left = `${left}px`;
+  card.style.top = `${top}px`;
+  card.style.width = `${cardWidth}px`;
+
   card.style.background = "white";
   card.style.color = "#111827";
-  card.style.border = "1px solid #e5e7eb";
+  card.style.border = "1px solid rgba(15,23,42,0.08)";
   card.style.borderRadius = "12px";
   card.style.padding = "12px";
   card.style.zIndex = "999999";
-  card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+  card.style.boxShadow = "0 20px 40px rgba(15,23,42,0.12)";
   card.style.fontFamily = "Arial, sans-serif";
   
 
@@ -296,10 +313,16 @@ function showCommentCard(comment, pin) {
     editButton.addEventListener("click", () => {
       const bodyEl = card.querySelector(".lesnoise-comment-body");
 
+      const actionsEl = card.querySelector("[data-comment-actions]");
+
+      if (actionsEl) {
+        actionsEl.style.display = "none";
+      }
+
       bodyEl.innerHTML = `
         <textarea
           data-edit-body
-          style="width:100%; min-height:80px; border:1px solid #d1d5db; border-radius:10px; padding:10px; font-size:14px;"
+          style="width:100%; min-height:80px; border:1px solid #d1d5db; outline:none; border-radius:10px; padding:10px; font-size:14px;"
         >${comment.body}</textarea>
 
         <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
@@ -313,6 +336,18 @@ function showCommentCard(comment, pin) {
 
       bodyEl.querySelector("[data-cancel-edit]").addEventListener("click", () => {
         bodyEl.innerHTML = comment.body;
+
+        if (actionsEl) {
+          actionsEl.style.display = "flex";
+        }
+      });
+
+      bodyEl.querySelectorAll("button").forEach((button) => {
+        if (button.hasAttribute("data-save-edit")) {
+          stylePopupButton(button, "primary");
+        } else {
+          stylePopupButton(button, "ghost");
+        }
       });
 
       bodyEl.querySelector("[data-save-edit]").addEventListener("click", async () => {
@@ -401,6 +436,15 @@ function showCommentCard(comment, pin) {
   }
 
   document.body.appendChild(card);
+    card.querySelectorAll("button").forEach((button) => {
+    if (button.hasAttribute("data-resolve")) {
+      stylePopupButton(button, "success");
+    } else if (button.hasAttribute("data-delete")) {
+      stylePopupButton(button, "danger");
+    } else {
+      stylePopupButton(button, "ghost");
+    }
+  });
 }
 
   function showCommentForm(clickData) {
@@ -425,9 +469,25 @@ function showCommentCard(comment, pin) {
     `;
 
     form.style.position = "absolute";
-    form.style.left = `${clickData.pageX + 16}px`;
-    form.style.top = `${clickData.pageY + 16}px`;
-    form.style.width = "260px";
+    const formWidth = 280;
+
+    let left = clickData.pageX + 16;
+    let top = clickData.pageY + 16;
+
+    const viewportRight =
+      window.scrollX + window.innerWidth;
+
+    if (left + formWidth > viewportRight - 16) {
+      left = viewportRight - formWidth - 16;
+    }
+
+    if (left < window.scrollX + 16) {
+      left = window.scrollX + 16;
+    }
+
+    form.style.left = `${left}px`;
+    form.style.top = `${top}px`;
+    form.style.width = `${formWidth}px`;
     form.style.background = "white";
     form.style.padding = "14px";
     form.style.borderRadius = "14px";
@@ -452,6 +512,15 @@ function showCommentCard(comment, pin) {
     });
 
     document.body.appendChild(form);
+
+    form.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") {
+        stylePopupButton(button, "primary");
+      } else {
+        stylePopupButton(button, "ghost");
+      }
+    });
+
     form.elements.body.focus();
   }
 
@@ -656,6 +725,35 @@ function handleRealtimeComment(event) {
   }
 
   renderComments();
+}
+
+function stylePopupButton(button, variant = "ghost") {
+  button.style.border = "1px solid rgba(15,23,42,0.08)";
+  button.style.borderRadius = "999px";
+  button.style.padding = "8px 14px";
+  button.style.fontSize = "12px";
+  button.style.fontWeight = "600";
+  button.style.cursor = "pointer";
+
+  if (variant === "primary") {
+    button.style.background = "#061226";
+    button.style.color = "white";
+  }
+
+if (variant === "success") {
+  button.style.background = "#dcfce7";
+  button.style.color = "#166534";
+}
+
+if (variant === "danger") {
+  button.style.background = "#fee2e2";
+  button.style.color = "#991b1b";
+}
+
+  if (variant === "ghost") {
+    button.style.background = "transparent";
+    button.style.color = "#334155";
+  }
 }
 
 })();
