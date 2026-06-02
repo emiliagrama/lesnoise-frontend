@@ -88,12 +88,21 @@
     document
       .querySelectorAll(".lesnoise-comment-card")
       .forEach((card) => card.remove());
+
+    clearActivePins();
   }
 
   function closeCommentForms() {
   document
     .querySelectorAll(".lesnoise-comment-form")
     .forEach((form) => form.remove());
+  }
+
+  function clearActivePins() {
+  document.querySelectorAll(".lesnoise-pin").forEach((pin) => {
+      pin.style.boxShadow = pin.dataset.originalShadow || "";
+      pin.style.transform = "translate(-50%, -50%) scale(1)";
+    });
   }
 
   function handleEscapeKey(e) {
@@ -215,6 +224,16 @@
 
       pin.addEventListener("click", function (e) {
         e.stopPropagation();
+
+        clearActivePins();
+
+        pin.dataset.originalShadow = pin.style.boxShadow;
+
+        pin.style.boxShadow =
+          "0 0 0 4px rgba(54, 192, 202, 0.2), 0 8px 20px rgba(15,23,42,0.18)";
+
+        pin.style.transform =
+          "translate(-50%, -50%) scale(1.15)";
 
         showCommentCard(comment, pin);
       });
