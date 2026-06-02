@@ -95,7 +95,7 @@ useEffect(() => {
     e.preventDefault();
 
     if (isCreating) return;
-
+    setError("");     
     setIsCreating(true);
 
     try {
@@ -117,10 +117,17 @@ useEffect(() => {
       setReviews((prev) => [...prev, reviewRes.data]);
       setName("");
       setBaseUrl("");
-    } catch (err) {
-      console.error("CREATE REVIEW ERROR:", err);
-      console.error("CREATE REVIEW ERROR RESPONSE:", err.response?.data);
-    }finally {
+      } catch (err) {
+        console.error("CREATE REVIEW ERROR:", err);
+        console.error("CREATE REVIEW ERROR RESPONSE:", err.response?.data);
+
+        const message =
+          err.response?.data?.errors?.join(", ") ||
+          err.response?.data?.error ||
+          "Could not create review. Please try again.";
+
+        setError(message);
+      } finally {
       setIsCreating(false);
     }
   };
@@ -145,7 +152,6 @@ useEffect(() => {
     }
   };
 
-  if (error) return <div style={{ padding: "40px" }}>{error}</div>;
 
   const totalReviews = reviews.length;
 
@@ -225,7 +231,11 @@ return (
             required
             disabled={isCreating}
           />
-
+{error && (
+  <p className="dashboard-form-error">
+    {error}
+  </p>
+)}
           <button
             className="dashboard-button dashboard-button--primary"
             type="submit"

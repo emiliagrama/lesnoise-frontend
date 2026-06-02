@@ -73,6 +73,22 @@
   gap: 14px;
 }
 
+.dashboard-form-error {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8px;
+
+  margin-top: 12px;
+  margin-top: 10px;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .dashboard-input {
   flex: 1;
   min-width: 220px;
