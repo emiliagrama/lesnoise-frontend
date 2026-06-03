@@ -68,6 +68,12 @@ export default function Login() {
               />
             </label>
 
+            <p style={{ textAlign: "right", marginBottom: "1rem" }}>
+              <Link to="/forgot-password">
+                Forgot password?
+              </Link>
+            </p>
+
             <button type="submit">Login</button>
 
             {error && <p className="login-error">{error}</p>}
