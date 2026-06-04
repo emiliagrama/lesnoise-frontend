@@ -12,7 +12,7 @@ export default function ReviewPage() {
   const [error, setError] = useState("");
   const [copiedClientLink, setCopiedClientLink] = useState(false);
   const [copiedSnippet, setCopiedSnippet] = useState(false);
-  const [showInstall, setShowInstall] = useState(true);
+  const [showInstall, setShowInstall] = useState(false);
 
   useEffect(() => {
     const loadReview = async () => {
@@ -78,7 +78,7 @@ export default function ReviewPage() {
 
   return (
     <main className="review-page">
-      {isDeveloperView && <AppNavbar showBackToDashboard />}
+      {isDeveloperView && <AppNavbar showSettings={false} />}
       <header className="review-header">
         <div className="review-shell review-header__inner">
           <div className="review-view-badge">

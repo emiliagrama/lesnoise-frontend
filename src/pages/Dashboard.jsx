@@ -264,6 +264,7 @@ return (
             placeholder="Review name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            maxLength={30}
             required
             disabled={isCreating}
           />
@@ -369,6 +370,7 @@ return (
                 className="dashboard-input"
                 value={renameValue}
                 onChange={(e) => setRenameValue(e.target.value)}
+                maxLength={30}
                 autoFocus
               />
 

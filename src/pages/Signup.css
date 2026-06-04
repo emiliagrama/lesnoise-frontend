@@ -1,3 +1,7 @@
+.signup-page * {
+  box-sizing: border-box;
+}
+
 .signup-page {
   min-height: 100vh;
   background:
@@ -123,7 +127,7 @@
   font-weight: 600;
 }
 
-.signup -switch a {
+.signup-switch a {
   color: #071126;
   font-weight: 800;
 }
@@ -147,5 +151,35 @@
 
   .signup-copy p:not(.signup-eyebrow) {
     font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .signup-shell {
+    width: min(100% - 32px, 380px);
+    margin-top: 32px;
+  }
+
+  .signup-card {
+    padding: 28px;
+  }
+
+  .signup-card form {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .signup-card input,
+  .signup-card button {
+    width: 100%;
+  }
+
+  .signup-card input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .signup-card button {
+    padding: 13px 16px;
   }
 }

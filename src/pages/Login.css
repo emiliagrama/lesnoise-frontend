@@ -1,3 +1,6 @@
+.login-page * {
+  box-sizing: border-box;
+}
 .login-page {
   min-height: 100vh;
   background:
@@ -135,6 +138,11 @@
   white-space: pre-line;
 }
 
+.login-switch p {
+  color: #071126;
+  font-weight: 800;
+}
+
 @media (max-width: 850px) {
   .login-shell {
     margin-top: 40px;
@@ -150,3 +158,34 @@
     font-size: 18px;
   }
 }
+
+@media (max-width: 768px) {
+  .login-shell {
+    width: min(100% - 32px, 380px);
+    margin-top: 32px;
+  }
+
+  .login-card {
+    padding: 28px;
+  }
+
+  .login-card form {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .login-card input,
+  .login-card button {
+    width: 100%;
+  }
+
+  .login-card input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .login-card button {
+    padding: 13px 16px;
+  }
+}
+

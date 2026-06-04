@@ -68,7 +68,7 @@ export default function Login() {
               />
             </label>
 
-            <p style={{ textAlign: "right", marginBottom: "1rem" }}>
+            <p className="signup-switch">
               <Link to="/forgot-password">
                 Forgot password?
               </Link>
