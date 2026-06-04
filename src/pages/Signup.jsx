@@ -75,6 +75,7 @@ export default function Signup() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                minLength={8}
                 required
                 placeholder="••••••••"
               />
@@ -86,6 +87,7 @@ export default function Signup() {
                 type="password"
                 value={passwordConfirmation}
                 onChange={(e) => setPasswordConfirmation(e.target.value)}
+                minLength={8}
                 required
                 placeholder="••••••••"
               />

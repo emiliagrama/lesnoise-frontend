@@ -47,6 +47,7 @@ export default function ResetPassword() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                minLength={8}
                 required
               />
             </label>
@@ -57,6 +58,7 @@ export default function ResetPassword() {
                 type="password"
                 value={passwordConfirmation}
                 onChange={(e) => setPasswordConfirmation(e.target.value)}
+                minLength={8}
                 required
               />
             </label>

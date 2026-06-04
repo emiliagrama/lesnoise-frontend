@@ -105,6 +105,7 @@ export default function Settings() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              minLength={8}
               required
             />
 
@@ -113,6 +114,7 @@ export default function Settings() {
               type="password"
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
+              minLength={8}
               required
             />
 
