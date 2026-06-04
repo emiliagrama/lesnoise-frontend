@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../lib/api";
 import "./ReviewPage.css";
+import AppNavbar from "../components/AppNavbar";
 
 export default function ReviewPage() {
   const { id, shareToken } = useParams();
@@ -77,6 +78,7 @@ export default function ReviewPage() {
 
   return (
     <main className="review-page">
+      {isDeveloperView && <AppNavbar showBackToDashboard />}
       <header className="review-header">
         <div className="review-shell review-header__inner">
           <div className="review-view-badge">

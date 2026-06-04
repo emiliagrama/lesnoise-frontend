@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../lib/api";
 import "./Dashboard.css";
+import AppNavbar from "../components/AppNavbar";
 
 export default function Dashboard() {
   const [reviews, setReviews] = useState([]);
@@ -158,6 +159,7 @@ useEffect(() => {
 
 return (
   <div className="dashboard-page">
+    <AppNavbar />
     <div className="dashboard-shell">
       <div className="dashboard-topbar">
         <div>

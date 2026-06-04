@@ -1,0 +1,64 @@
+
+/* =========================
+   Header
+========================= */
+
+.lesnoise-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  background: rgba(248, 250, 252, 0.76);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.lesnoise-header__inner {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lesnoise-logo {
+  text-decoration: none;
+  color: #0f172a;
+  font-size: 1.10rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.lesnoise-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.lesnoise-header__login,
+.lesnoise-header__signup {
+  text-decoration: none;
+  font-size: 0.96rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.lesnoise-header__login {
+  color: #0f172a;
+}
+
+.lesnoise-header__signup {
+  background: #071127;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 999px;
+}
+
+.lesnoise-header__login:hover, .lesnoise-header__signup:hover {
+  opacity: 0.65;
+}
+
+button.lesnoise-header__signup {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  line-height: inherit;
+}
