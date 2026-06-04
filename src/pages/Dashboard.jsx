@@ -12,6 +12,9 @@ export default function Dashboard() {
   const socketsRef = useRef([]);
   const [reviewToDelete, setReviewToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [reviewToRename, setReviewToRename] = useState(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [isRenaming, setIsRenaming] = useState(false);
 
 useEffect(() => {
   if (reviews.length === 0) return;
@@ -153,9 +156,49 @@ useEffect(() => {
     }
   };
 
+const handleRenameReview = async (e) => {
+  e.preventDefault();
+
+  if (!reviewToRename || isRenaming) return;
+
+  const cleanName = renameValue.trim();
+
+  if (!cleanName) {
+    setError("Review name cannot be empty.");
+    return;
+  }
+
+  setIsRenaming(true);
+  setError("");
+
+  try {
+    const res = await api.patch(`/api/review_sessions/${reviewToRename.id}`, {
+      name: cleanName,
+    });
+
+    setReviews((prevReviews) =>
+      prevReviews.map((review) =>
+        review.id === reviewToRename.id ? res.data : review
+      )
+    );
+
+    setReviewToRename(null);
+    setRenameValue("");
+  } catch (err) {
+    console.error("RENAME REVIEW ERROR:", err);
+
+    const message =
+      err.response?.data?.errors?.join(", ") ||
+      err.response?.data?.error ||
+      "Could not rename review.";
+
+    setError(message);
+  } finally {
+    setIsRenaming(false);
+  }
+};
 
   const totalReviews = reviews.length;
-
 
 return (
   <div className="dashboard-page">
@@ -292,6 +335,17 @@ return (
                   <button
                     type="button"
                     className="dashboard-button dashboard-button--ghost"
+                    onClick={() => {
+                      setReviewToRename(review);
+                      setRenameValue(review.name);
+                    }}
+                  >
+                    Rename
+                  </button>
+
+                  <button
+                    type="button"
+                    className="dashboard-button dashboard-button--ghost"
                     
                     onClick={() => setReviewToDelete(review)}
                   >
@@ -301,6 +355,46 @@ return (
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {reviewToRename && (
+        <div className="dashboard-modal-backdrop">
+          <div className="dashboard-modal">
+            <h2>Rename review session</h2>
+
+            <form onSubmit={handleRenameReview}>
+              <input
+                type="text"
+                className="dashboard-input"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                autoFocus
+              />
+
+              <div className="dashboard-modal__actions">
+                <button
+                  type="button"
+                  className="dashboard-button dashboard-button--ghost"
+                  onClick={() => {
+                    setReviewToRename(null);
+                    setRenameValue("");
+                  }}
+                  disabled={isRenaming}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="dashboard-button dashboard-button--primary"
+                  disabled={isRenaming}
+                >
+                  {isRenaming ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
