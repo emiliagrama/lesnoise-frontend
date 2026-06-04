@@ -1,0 +1,144 @@
+.settings-page {
+  min-height: calc(100vh - 60px);
+  padding: 60px 24px;
+}
+
+.settings-card {
+  max-width: 720px;
+  margin: 0 auto;
+
+  background: white;
+  border: 1px solid #b7e6ff;
+  border-radius: 32px;
+
+  padding: 48px;
+}
+
+.settings-eyebrow {
+  text-align: center;
+  color: #0891c8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  margin-bottom: 12px;
+}
+
+.settings-card h1 {
+  text-align: center;
+  color: #0f172a;
+  font-size: 3rem;
+  line-height: 1;
+
+  margin-bottom: 16px;
+}
+
+.settings-subtitle {
+  text-align: center;
+  color: #64748b;
+  max-width: 420px;
+
+  margin: 0 auto 48px;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.settings-section h2 {
+  color: #0f172a;
+  font-size: 1.5rem;
+
+  margin-bottom: 12px;
+}
+
+.settings-section label {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.settings-section input {
+  width: 100%;
+
+  padding: 16px 18px;
+
+  border: 1px solid #d9e5f3;
+  border-radius: 18px;
+
+  background: #f5f9ff;
+
+  font-size: 1rem;
+}
+
+.settings-section input:disabled {
+  background: #eef4fb;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.settings-submit {
+  margin-top: 12px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #071127;
+  color: white;
+
+  padding: 16px 24px;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.settings-submit:hover {
+  opacity: 0.85;
+}
+
+.settings-error {
+  margin: 0 auto 24px;
+  max-width: 520px;
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 16px;
+  padding: 14px 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.settings-success {
+  margin: 0 auto 24px;
+  max-width: 520px;
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 14px 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.settings-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .settings-card {
+    padding: 32px 24px;
+  }
+
+  .settings-card h1 {
+    font-size: 2.2rem;
+  }
+}

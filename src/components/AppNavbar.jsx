@@ -1,12 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../components/AppNavbar.css";
 
-export default function AppNavbar({ showBackToDashboard = false }) {
-  const navigate = useNavigate();
-
+export default function AppNavbar({
+  showBackToDashboard = false,
+  showSettings = true,
+}) {
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    window.location.href = "/login";
   };
 
   return (
@@ -17,6 +18,12 @@ export default function AppNavbar({ showBackToDashboard = false }) {
         </Link>
 
         <nav className="lesnoise-header__nav">
+          {showSettings && (
+            <Link to="/settings" className="lesnoise-header__login">
+              Settings
+            </Link>
+          )}
+
           {showBackToDashboard && (
             <Link to="/dashboard" className="lesnoise-header__login">
               Back to dashboard

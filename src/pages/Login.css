@@ -131,6 +131,10 @@
   font-weight: 700;
 }
 
+.forgot-success {
+  white-space: pre-line;
+}
+
 @media (max-width: 850px) {
   .login-shell {
     margin-top: 40px;

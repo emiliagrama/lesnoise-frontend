@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -33,8 +34,19 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+
       {/* client/share view */}
       <Route path="/review/:shareToken" element={<ReviewPage />} />
+
+
     </Routes>
   );
 }

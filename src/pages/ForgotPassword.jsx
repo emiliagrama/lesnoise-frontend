@@ -14,9 +14,9 @@ export default function ForgotPassword() {
         frontend_url: window.location.origin
       });
 
-      setMessage(
-        "If an account exists for that email, a reset link has been sent."
-      );
+    setMessage(
+      "Password reset instructions have been sent.\n\nPlease check your email inbox and spam folder, then follow the reset link."
+    );
     } catch (err) {
       console.error(err);
     }
@@ -44,7 +44,11 @@ export default function ForgotPassword() {
             </button>
           </form>
 
-          {message && <p>{message}</p>}
+          {message && (
+            <p className="forgot-success">
+              {message}
+            </p>
+          )}
         </div>
       </section>
     </main>
