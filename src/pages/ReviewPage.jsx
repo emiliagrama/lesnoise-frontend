@@ -45,8 +45,7 @@ export default function ReviewPage() {
 
   const copyInstallSnippet = async () => {
     try {
-      const snippet = `<script src="${window.location.origin}/lesnoise-widget.js"></script>
-
+const snippet = `<script crossorigin src="http://127.0.0.1:5174/lesnoise-widget.js"></script>
 <script>
   Lesnoise.init({
     reviewToken: "${review.share_token}"
@@ -139,7 +138,7 @@ export default function ReviewPage() {
                   </div>
 
                   <pre className="review-code-block">
-  {`<script src="${window.location.origin}/lesnoise-widget.js"></script>
+  {`<script crossorigin src="http://127.0.0.1:5174/lesnoise-widget.js"></script>
   <script>
     Lesnoise.init({
       reviewToken: "${review.share_token}"

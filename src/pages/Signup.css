@@ -20,9 +20,11 @@
 
 .signup-logo,
 .signup-nav-link {
-  color: #0b1328;
   text-decoration: none;
-  font-weight: 700;
+  color: #0f172a;
+  font-size: 1.10rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .signup-nav-link {
