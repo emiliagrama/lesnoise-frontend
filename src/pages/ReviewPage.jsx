@@ -4,6 +4,8 @@ import api from "../lib/api";
 import "./ReviewPage.css";
 import AppNavbar from "../components/AppNavbar";
 
+const WIDGET_URL = import.meta.env.VITE_WIDGET_URL;
+
 export default function ReviewPage() {
   const { id, shareToken } = useParams();
   const isDeveloperView = Boolean(id);
@@ -138,7 +140,7 @@ const snippet = `<script crossorigin src="http://127.0.0.1:5174/lesnoise-widget.
                   </div>
 
                   <pre className="review-code-block">
-  {`<script crossorigin src="http://127.0.0.1:5174/lesnoise-widget.js"></script>
+  {`<script crossorigin src="${WIDGET_URL}"></script>
   <script>
     Lesnoise.init({
       reviewToken: "${review.share_token}"
