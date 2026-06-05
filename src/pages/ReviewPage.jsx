@@ -78,7 +78,10 @@ export default function ReviewPage() {
 
   return (
     <main className="review-page">
-      {isDeveloperView && <AppNavbar showSettings={false} />}
+      {isDeveloperView && <AppNavbar
+        showSettings={false}
+        showBackArrow={true}
+      />}
       <header className="review-header">
         <div className="review-shell review-header__inner">
           <div className="review-view-badge">
