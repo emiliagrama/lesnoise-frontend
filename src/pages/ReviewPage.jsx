@@ -47,7 +47,15 @@ export default function ReviewPage() {
 
   const copyInstallSnippet = async () => {
     try {
-  const snippet = `<script crossorigin src="http://127.0.0.1:5174/lesnoise-widget.js"></script>
+  const snippet = `<script>
+    window.LesnoiseConfig = {
+      apiUrl: "${import.meta.env.VITE_API_URL}",
+      cableUrl: "${import.meta.env.VITE_API_URL.replace("https://", "wss://")}/cable"
+    };
+  </script>
+
+  <script crossorigin src="${import.meta.env.VITE_WIDGET_URL}"></script>
+
   <script>
     Lesnoise.init({
       reviewToken: "${review.share_token}"
