@@ -1,6 +1,6 @@
 (function () {
-  const API_URL = "http://localhost:3000";
-  const CABLE_URL = "ws://127.0.0.1:3000/cable";
+const API_URL = window.LesnoiseConfig?.apiUrl || "http://localhost:3000";
+const CABLE_URL = window.LesnoiseConfig?.cableUrl || "ws://127.0.0.1:3000/cable";
 
   let reviewToken = null;
   let review = null;
