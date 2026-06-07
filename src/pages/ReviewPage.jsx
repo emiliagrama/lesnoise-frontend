@@ -101,6 +101,14 @@ const copyInstallSnippet = async () => {
 
           <p className="review-url">{review.base_url}</p>
 
+          {!isDeveloperView && (
+  <div className="review-client-help">
+Leave feedback directly on the website.
+
+Click anywhere on the page to add comments, request changes, or report issues.
+The developer can reply and mark feedback as resolved once completed.  </div>
+)}
+
           {isDeveloperView && (
             <section className="review-install-card">
               <button
