@@ -23,7 +23,7 @@ useEffect(() => {
   socketsRef.current = [];
 
   reviews.forEach((review) => {
-    const socket = new WebSocket("ws://127.0.0.1:3000/cable");
+    const socket = new WebSocket(import.meta.env.VITE_CABLE_URL);
 
     const identifier = JSON.stringify({
       channel: "ReviewSessionChannel",
