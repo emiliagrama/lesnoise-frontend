@@ -45,31 +45,16 @@ export default function ReviewPage() {
     }
   };
 
-  const copyInstallSnippet = async () => {
-    try {
-  const snippet = `<script>
-    window.LesnoiseConfig = {
-      apiUrl: "${import.meta.env.VITE_API_URL}",
-      cableUrl: "${import.meta.env.VITE_API_URL.replace("https://", "wss://")}/cable"
-    };
-  </script>
+const copyInstallSnippet = async () => {
+  try {
+    await navigator.clipboard.writeText(installSnippet);
 
-  <script crossorigin src="${import.meta.env.VITE_WIDGET_URL}"></script>
-
-  <script>
-    Lesnoise.init({
-      reviewToken: "${review.share_token}"
-    });
-  </script>`;
-
-      await navigator.clipboard.writeText(snippet);
-
-      setCopiedSnippet(true);
-      setTimeout(() => setCopiedSnippet(false), 2000);
-    } catch (err) {
-      console.error("COPY SNIPPET ERROR:", err);
-    }
-  };
+    setCopiedSnippet(true);
+    setTimeout(() => setCopiedSnippet(false), 2000);
+  } catch (err) {
+    console.error("COPY SNIPPET ERROR:", err);
+  }
+};
 
   if (error) {
     return <div className="review-state">{error}</div>;
@@ -84,6 +69,21 @@ export default function ReviewPage() {
   const reviewUrl = `${review.base_url}?lesnoise_review=${review.share_token}&lesnoise_role=${
     isDeveloperView ? "developer" : "client"
   }`;
+
+  const installSnippet = `<script>
+    window.LesnoiseConfig = {
+      apiUrl: "${import.meta.env.VITE_API_URL}",
+      cableUrl: "${import.meta.env.VITE_API_URL.replace("https://", "wss://")}/cable"
+    };
+  </script>
+
+  <script crossorigin src="${WIDGET_URL}"></script>
+
+  <script>
+    Lesnoise.init({
+      reviewToken: "${review.share_token}"
+    });
+  </script>`;
 
   return (
     <main className="review-page">
@@ -147,14 +147,9 @@ export default function ReviewPage() {
                     </div>
                   </div>
 
-                  <pre className="review-code-block">
-  {`<script crossorigin src="${WIDGET_URL}"></script>
-  <script>
-    Lesnoise.init({
-      reviewToken: "${review.share_token}"
-    });
-  </script>`}
-                  </pre>
+<pre className="review-code-block">
+  {installSnippet}
+</pre>
 
                   <button
                     type="button"
