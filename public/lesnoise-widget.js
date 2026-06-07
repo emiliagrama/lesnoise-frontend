@@ -678,9 +678,18 @@ async function handlePageClick(e) {
   });
 }
 
-window.addEventListener("resize", renderComments);
-window.addEventListener("scroll", renderComments);
-window.addEventListener("load", renderComments);
+
+function scheduleCommentRender() {
+  renderComments();
+
+  requestAnimationFrame(() => {
+    renderComments();
+  });
+
+  setTimeout(renderComments, 100);
+  setTimeout(renderComments, 300);
+  setTimeout(renderComments, 700);
+}
 
 function handlePageChange() {
   if (window.location.pathname === currentPagePath) return;
@@ -694,9 +703,7 @@ function handlePageChange() {
     .querySelectorAll(".lesnoise-pin")
     .forEach((pin) => pin.remove());
 
-  requestAnimationFrame(() => {
-    renderComments();
-  });
+  scheduleCommentRender();
 }
 
 function watchPageChanges() {
@@ -722,6 +729,11 @@ function watchPageChanges() {
     setTimeout(handlePageChange, 0);
   });
 }
+
+
+window.addEventListener("resize", renderComments);
+window.addEventListener("scroll", renderComments);
+window.addEventListener("load", renderComments);
 
 function subscribeToReviewSession() {
   if (!review || cableSocket) return;
