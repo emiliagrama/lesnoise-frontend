@@ -9,6 +9,7 @@ const CABLE_URL = window.LesnoiseConfig?.cableUrl || "ws://127.0.0.1:3000/cable"
   let cableSocket = null;
   let cableIdentifier = null;
   let currentRole = "client";
+  let currentPagePath = window.location.pathname;
 
   window.Lesnoise = window.Lesnoise || {};
 
@@ -38,6 +39,8 @@ const CABLE_URL = window.LesnoiseConfig?.cableUrl || "ws://127.0.0.1:3000/cable"
   function boot() {
     document.addEventListener("click", handlePageClick, true);
     document.addEventListener("keydown", handleEscapeKey);
+
+    watchPageChanges();
 
     setMode("comment");
 
@@ -678,6 +681,47 @@ async function handlePageClick(e) {
 window.addEventListener("resize", renderComments);
 window.addEventListener("scroll", renderComments);
 window.addEventListener("load", renderComments);
+
+function handlePageChange() {
+  if (window.location.pathname === currentPagePath) return;
+
+  currentPagePath = window.location.pathname;
+
+  closeCommentCards();
+  closeCommentForms();
+
+  document
+    .querySelectorAll(".lesnoise-pin")
+    .forEach((pin) => pin.remove());
+
+  requestAnimationFrame(() => {
+    renderComments();
+  });
+}
+
+function watchPageChanges() {
+  if (window.__lesnoiseWatchingPageChanges) return;
+  window.__lesnoiseWatchingPageChanges = true;
+
+  const originalPushState = history.pushState;
+  const originalReplaceState = history.replaceState;
+
+  history.pushState = function (...args) {
+    const result = originalPushState.apply(this, args);
+    setTimeout(handlePageChange, 0);
+    return result;
+  };
+
+  history.replaceState = function (...args) {
+    const result = originalReplaceState.apply(this, args);
+    setTimeout(handlePageChange, 0);
+    return result;
+  };
+
+  window.addEventListener("popstate", () => {
+    setTimeout(handlePageChange, 0);
+  });
+}
 
 function subscribeToReviewSession() {
   if (!review || cableSocket) return;
