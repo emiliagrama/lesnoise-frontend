@@ -58,6 +58,7 @@
   line-height: 0.92;
   letter-spacing: -0.07em;
   margin: 0;
+  color: #0f172a;
 }
 
 .login-copy p:not(.login-eyebrow) {
