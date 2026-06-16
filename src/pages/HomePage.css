@@ -91,6 +91,7 @@ body {
   font-size: clamp(3.4rem, 6vw, 5.8rem);
   line-height: 0.92;
   letter-spacing: -0.07em;
+  color: #0f172a;
   font-weight: 700;
   transform: translateX(-10px);
 }
@@ -455,6 +456,7 @@ body {
   margin: 10px 0;
   font-size: clamp(1.8rem, 5vw, 3rem);
   line-height: 1.03;
+  color: #0f172a;
   letter-spacing: -0.06em;
   font-weight: 600;
 }
@@ -500,6 +502,7 @@ body {
 
 .lesnoise-cta__title {
   margin: 0 0 16px;
+  color: #0f172a;
   font-size: clamp(2.3rem, 4vw, 4rem);
   line-height: 0.98;
   letter-spacing: -0.07em;
