@@ -35,7 +35,7 @@ export default function ReviewPage() {
 
   const copyClientLink = async () => {
     try {
-      const shareUrl = `${window.location.origin}/review/${review.share_token}`;
+      const shareUrl = `${window.location.origin}/review/${review.slug}`;
       await navigator.clipboard.writeText(shareUrl);
 
       setCopiedClientLink(true);
@@ -64,12 +64,9 @@ const copyInstallSnippet = async () => {
     return <div className="review-state">Loading review...</div>;
   }
 
-  const clientReviewLink = `${window.location.origin}/review/${review.share_token}`;
+  const clientReviewLink = `${window.location.origin}/review/${review.slug}`;
 
-  const reviewUrl = `${review.base_url}?lesnoise_review=${review.share_token}&lesnoise_role=${
-    isDeveloperView ? "developer" : "client"
-  }`;
-
+  const reviewUrl = `${review.base_url}?lesnoise_review=${review.slug}&lesnoise_role=${isDeveloperView ? "developer" : "client"}`;
   const installSnippet = `<script>
     window.LesnoiseConfig = {
       apiUrl: "${import.meta.env.VITE_API_URL}",
