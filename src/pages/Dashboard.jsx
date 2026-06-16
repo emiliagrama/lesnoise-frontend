@@ -434,6 +434,12 @@ return (
         </div>
       )}
     </div>
+    <div className="dashboard-support">
+      <p>Need help or want to report a bug?</p>
+      <a href="mailto:support@lesnoise.com">
+        support@lesnoise.com
+      </a>
+    </div>
   </div>
 );
 }

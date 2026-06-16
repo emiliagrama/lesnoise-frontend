@@ -357,6 +357,30 @@
   font-weight: 700;
 }
 
+.dashboard-support {
+  text-align: center;
+  padding: 24px 0 1px;
+  margin-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dashboard-support p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.dashboard-support a {
+  color: #2296b9;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.dashboard-support a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 760px) {
   .dashboard-stats {
     grid-template-columns: 1fr;

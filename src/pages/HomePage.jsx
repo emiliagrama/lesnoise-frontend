@@ -171,9 +171,17 @@ export default function HomePage() {
             <Link to="/login" className="lesnoise-button lesnoise-button--ghost">
               Start a review
             </Link>
+            
           </div>
         </div>
-      </section>
+        </section>
+        <footer className="landing-footer">
+          <p>Questions or feedback?</p>
+          <a href="mailto:support@lesnoise.com">
+            support@lesnoise.com
+          </a>
+        </footer>
+      
     </main>
   );
 }
