@@ -80,9 +80,14 @@ const copyInstallSnippet = async () => {
   <script crossorigin src="${WIDGET_URL}"></script>
 
   <script>
-    Lesnoise.init({
-      reviewToken: "${review.share_token}"
-    });
+    const lesnoiseParams = new URLSearchParams(window.location.search);
+    const lesnoiseReviewToken = lesnoiseParams.get("lesnoise_review");
+
+    if (lesnoiseReviewToken) {
+      Lesnoise.init({
+        reviewToken: lesnoiseReviewToken
+      });
+    }
   </script>`;
 
   return (
