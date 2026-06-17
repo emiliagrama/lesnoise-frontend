@@ -157,7 +157,7 @@ const copyInstallSnippet = async () => {
                       </ul>
 
                       <p>
-                        Once installed, comments stay attached to the real page while scrolling.
+                        Once installed and deployed, comments stay attached to the real page while scrolling.
                       </p>
                     </div>
                   </div>
