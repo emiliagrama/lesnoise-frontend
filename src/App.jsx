@@ -15,7 +15,8 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />      <Route path="/signup" element={<Signup />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />    
+      <Route path="/signup" element={<Signup />} />
       <Route
           path="/dashboard"
           element={
@@ -45,7 +46,6 @@ export default function App() {
 
       {/* client/share view */}
       <Route path="/review/:shareToken" element={<ReviewPage />} />
-
 
     </Routes>
   );
