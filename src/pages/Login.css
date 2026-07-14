@@ -43,6 +43,11 @@
   align-items: center;
 }
 
+.forgot-shell {
+  grid-template-columns: 420px;
+  justify-content: center;
+}
+
 .login-eyebrow {
   color: #0097c8;
   text-transform: uppercase;

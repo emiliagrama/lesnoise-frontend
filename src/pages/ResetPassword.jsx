@@ -36,7 +36,7 @@ export default function ResetPassword() {
 
   return (
     <main className="login-page">
-      <section className="login-shell">
+      <section className="login-shell forgot-shell">
         <div className="login-card">
           <h2>Reset password</h2>
 
