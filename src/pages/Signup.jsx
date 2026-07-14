@@ -9,6 +9,8 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [error, setError] = useState("");
 
   const handleSignup = async (e) => {
@@ -71,26 +73,58 @@ export default function Signup() {
 
             <label>
               Password
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength={8}
-                required
-                placeholder="••••••••"
-              />
+
+              <div className="password-field">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={8}
+                  required
+                  placeholder="••••••••"
+                />
+
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
             </label>
 
             <label>
               Confirm password
-              <input
-                type="password"
-                value={passwordConfirmation}
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                minLength={8}
-                required
-                placeholder="••••••••"
-              />
+
+              <div className="password-field">
+                <input
+                  type={showPasswordConfirmation ? "text" : "password"}
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
+                  minLength={8}
+                  required
+                  placeholder="••••••••"
+                />
+
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() =>
+                    setShowPasswordConfirmation((current) => !current)
+                  }
+                  aria-label={
+                    showPasswordConfirmation
+                      ? "Hide password confirmation"
+                      : "Show password confirmation"
+                  }
+                  aria-pressed={showPasswordConfirmation}
+                >
+                  {showPasswordConfirmation ? "Hide" : "Show"}
+                </button>
+              </div>
             </label>
 
             <button type="submit">Sign up</button>
