@@ -179,7 +179,8 @@
   border-radius: 0;
 }
 
-.password-toggle:hover {
+.password-field .password-toggle:hover {
+  transform: translateY(-50%);
   text-decoration: underline;
 }
 
